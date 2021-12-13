@@ -27,6 +27,39 @@
           </div>
         </div>
         <div class="box-body">
+
+<div class="alert alert-info">
+          <form id="form_log">
+             
+              <div class="col-sm-3">
+                <select name="id_cabang" id="id_cabang" class="form-control">
+                  <option value=""> --- pilih Cabang --- </option>
+                  <?php 
+                    $data_cabang = $this->m_cabang->m_data_cabang();
+                    foreach($data_cabang as $cabang)
+                    {
+                      if($cabang->id_cabang==$id_cabang)
+                      {
+                        $sel="selected";
+                      }else{
+                        $sel="";
+                      }
+                      echo "
+                        <option value='$cabang->id_cabang' $sel>$cabang->kode_cabang - $cabang->nama_cabang</option>
+                      ";
+                    }
+                  ?>                  
+              </select>
+              </div>
+
+              <div class="col-sm-2">
+                <input type="submit" class="btn btn-primary btn-block" value="Go">
+              </div>
+          </form>          
+          <div style="clear: both"></div>
+          </div>
+
+
 <div class="table-responsive">              
 <table id="tbl_datanya_barang" class="table  table-striped table-bordered"  cellspacing="0" width="100%">
       <thead>
@@ -115,11 +148,20 @@ function hapus_pending(grup_penjualan)
   if(confirm("Anda yakin?"))
   {
     $.get("<?php echo base_url()?>index.php/barang/hapus_pending/"+grup_penjualan,function(){
-        eksekusi_controller('<?php echo base_url()?>index.php/barang/lap_pending/','Penjualan Pending');  
+        eksekusi_controller('<?php echo base_url()?>index.php/barang/lap_pending/?id_cabang=<?php echo $id_cabang?>','Penjualan Pending');  
       })
   }
   
 }
+
+
+$("#form_log").on("submit",function(){
+    
+    var id_cabang = $("#id_cabang").val();
+
+    eksekusi_controller('<?php echo base_url()?>index.php/barang/lap_pending/?id_cabang='+id_cabang,'Laporan Transaksi');
+  return false;
+})
 
 $(document).ready(function(){
 

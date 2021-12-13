@@ -27,29 +27,20 @@
           </div>
         </div>
         <div class="box-body">
-              <?php 
-              if($this->session->userdata('level')=='1')//hanya admin
-              {?>
-              <button class="btn btn-primary" id="tambah_data"  onclick="tambah()">Tambah Data</button> 
-              <?}?>
+              
 <div class="table-responsive">
 <table id="tbl_datanya" class="table  table-striped table-bordered"  cellspacing="0" width="100%">
       <thead>
         <tr>
               
               <th>No</th>
-              <th width="10px">Id Barang</th>           
-              <th>Barang</th>                     
-              <th>Stok</th>                     
-              <th>Harga Beli</th>                     
-              <th>Harga Retail</th>                     
-              <th>Harga Lusin</th>                     
-              <th>Harga Koli</th>                     
-              <th>Jumlah / Lusin</th>                     
-              <th>Jumlah / Koli</th>                     
-              <th>Reminder Gudang</th>                     
-              <th>Berat (Gram)</th>                     
-              <th>Gambar</th>                     
+              <th width="10px">Id Trx</th>           
+              <th>Total</th>                     
+              <th>Fee Sales</th>                     
+              <th>Persen</th>                     
+              <th>Tgl Trx</th>                     
+              <th>Status Bayar</th>                     
+              <th>Tgl Bayar</th>                     
               <th>Action</th>                     
               
               
@@ -60,39 +51,21 @@
         $no = 0;
         foreach($all as $x)
         {
-          $btn = "<button class='btn btn-warning btn-xs' onclick='edit($x->id);return false;'>Edit</button>
-                  <button class='btn btn-danger btn-xs' onclick='hapus($x->id);return false;'>Hapus</button>    ";
-          $no++;
-          if($this->session->userdata('level')!='1')//hanya admin
-          {
-            $x->harga_pokok=0;
-            $btn="-";
-          }
-
-          if($this->session->userdata('level')=='6')
-          {
-              $btn = "<button class='btn btn-warning btn-xs' onclick='edit($x->id);return false;'>Edit</button>";
-          }
+         $no++;
 
             echo (" 
               
               <tr>
                 <td>$no</td>
-                <td>$x->id</td>
-                <td>$x->nama_barang</td>                
-                <td>$x->qty</td>                
-                <td>".rupiah($x->harga_pokok)."</td>                
-                <td>".rupiah($x->harga_retail)."</td>                
-                <td>".rupiah($x->harga_lusin)."</td>                
-                <td>".rupiah($x->harga_koli)."</td>                
-                <td>".rupiah($x->jum_per_lusin)."</td>     
-                <td>".rupiah($x->jum_per_koli)."</td>     
-                <td>$x->reminder</td>                           
-                <td>$x->berat</td>                           
-                <td><a target='blank' href='".base_url()."uploads/$x->gambar'>$x->gambar</a></td>                           
-                <td>
-                  $btn
-                </td>
+                <td><a href='".base_url()."index.php/barang/struk_penjualan/".$x->grup_penjualan."' target='blank'>$x->grup_penjualan</a></td>
+                   
+                <td>".rupiah($x->jumlah_trx)."</td>                
+                <td>".rupiah($x->hasil_sales)."</td>                
+                <td>".rupiah($x->persen_sales)."</td>                
+                <td>$x->tgl</td>
+                <td>$x->status_bayar</td>                
+                <td>$x->tgl_bayar</td>
+                
               </tr>
           
           ");
@@ -104,11 +77,7 @@
       </tbody>
   </table>
 </div>
-<?php
-    if ($this->session->userdata('level') == '1') {
-    ?>
-<a href="<?php echo(base_url())?>index.php/barang/data_xl" target="blank" class="btn btn-primary">Excel</a>
-<?php } ?>
+
 
         </div>
         

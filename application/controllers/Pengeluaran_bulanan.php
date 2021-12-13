@@ -61,10 +61,12 @@ class Pengeluaran_bulanan extends CI_Controller {
 
 	public function simpan_pengeluaran_bulanan()
 	{
+		$id_cabang = $this->session->userdata('id_cabang');
 		$data = $this->input->post();
 		//var_dump($data);		
 		$data['jumlah'] = hanya_nomor($data['jumlah']);
 		$data['url_bukti'] = upload_file('url_bukti');
+		$data['id_cabang'] = $id_cabang;
 
 		$this->db->set($data);
 		$this->db->insert('tbl_pengeluaran_bulanan_transaksi');
@@ -80,6 +82,7 @@ class Pengeluaran_bulanan extends CI_Controller {
 						);				
 			/* untuk id_referensi = id_group/id_table*/
 			$ser_trx['id_referensi'] = $id_trx;	
+			$ser_trx['id_cabang'] = $id_cabang;
 			$this->db->set($ser_trx);
 			$this->db->insert('tbl_transaksi');
 			/*********** insert ke transaksi **************/
@@ -94,9 +97,11 @@ class Pengeluaran_bulanan extends CI_Controller {
 
 	public function simpan_form()
 	{
+		$id_cabang = $this->session->userdata('id_cabang');
 		$id = $this->input->post('id');
 		
 		$serialize = $this->input->post();
+		$serialize['id_cabang'] = $id_cabang;
 
 		if($id=='')
 		{

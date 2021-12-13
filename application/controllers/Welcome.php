@@ -16,6 +16,7 @@ class Welcome extends CI_Controller {
 		date_default_timezone_set("Asia/jakarta");
 		//$this->load->library('datatables');
 		$this->load->model('m_admin');
+		$this->load->model('m_cabang');
 		$this->load->model('m_laporan_keuangan');
 		$this->load->model('m_pelanggan');
 		$this->load->model('m_barang');
@@ -33,6 +34,7 @@ class Welcome extends CI_Controller {
 		$data['session'] = $this->session->userdata();
 		$data['chat'] = $this->m_chat->list_chat_kasir('kasir');
 		$this->load->view('welcome_message',$data);
+
 	}
 
 

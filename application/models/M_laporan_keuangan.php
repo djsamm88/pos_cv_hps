@@ -12,6 +12,7 @@ if (!defined('BASEPATH'))exit('No direct script access allowed');
 
 	public function m_chart()
 	{
+		$id_cabang=$this->session->userdata('id_cabang');
 		$q = $this->db->query("
 				SELECT 
 						DATE(a.tanggal) AS tanggal,
@@ -41,6 +42,7 @@ if (!defined('BASEPATH'))exit('No direct script access allowed');
 										SELECT a.*,(a.tgl_update) AS tanggal,b.nama,b.jenis FROM `tbl_transaksi` a 
 										INNER JOIN tbl_group_transaksi b 
 										ON a.id_group=b.id
+										WHERE a.id_cabang='$id_cabang'
 										)a
 									)a 
 								)a
@@ -54,6 +56,7 @@ if (!defined('BASEPATH'))exit('No direct script access allowed');
 
 	public function m_sisa_kas()
 	{
+		$id_cabang=$this->session->userdata('id_cabang');
 		$q = $this->db->query("
 								SELECT SUM(a.jumlah) AS jumlah,a.jenis 
 								FROM ( 
@@ -61,6 +64,7 @@ if (!defined('BASEPATH'))exit('No direct script access allowed');
 									FROM `tbl_transaksi` a 
 									LEFT JOIN tbl_group_transaksi b 
 									ON a.id_group=b.id 
+									WHERE a.id_cabang='$id_cabang'
 									)a 
 
 								GROUP BY a.jenis
@@ -72,6 +76,7 @@ if (!defined('BASEPATH'))exit('No direct script access allowed');
 
 	public function m_by_tgl($tgl)
 	{
+		$id_cabang=$this->session->userdata('id_cabang');
 		$q = $this->db->query("
 							SELECT a.*,
 								IFNULL(a.debet,0)-IFNULL(a.kredit,0) AS saldo
@@ -96,6 +101,7 @@ if (!defined('BASEPATH'))exit('No direct script access allowed');
 										FROM `tbl_transaksi` a 
 										INNER JOIN tbl_group_transaksi b 
 										ON a.id_group=b.id
+										WHERE a.id_cabang='$id_cabang'
 										)a
 									)a 
 								)a
@@ -110,6 +116,7 @@ if (!defined('BASEPATH'))exit('No direct script access allowed');
 
 	public function m_by_id($id)
 	{
+		$id_cabang=$this->session->userdata('id_cabang');
 		$q = $this->db->query("
 							SELECT a.*,
 								IFNULL(a.debet,0)-IFNULL(a.kredit,0) AS saldo
@@ -134,6 +141,7 @@ if (!defined('BASEPATH'))exit('No direct script access allowed');
 										FROM `tbl_transaksi` a 
 										INNER JOIN tbl_group_transaksi b 
 										ON a.id_group=b.id
+										WHERE a.id_cabang='$id_cabang'
 										)a
 									)a 
 								)a
@@ -151,6 +159,7 @@ if (!defined('BASEPATH'))exit('No direct script access allowed');
 
 	public function m_laporan_group()
 	{
+		$id_cabang=$this->session->userdata('id_cabang');
 		$q = $this->db->query("
 							SELECT a.nama,a.id_group,a.urutan,
 								IFNULL(a.debet,0) AS debet,
@@ -169,7 +178,7 @@ if (!defined('BASEPATH'))exit('No direct script access allowed');
 										LEFT JOIN 
 										(
 											SELECT id_group,SUM(jumlah) AS jumlah FROM `tbl_transaksi`
-												
+												WHERE id_cabang='$id_cabang'
 												GROUP BY id_group
 										)b 
 										ON a.id=b.id_group
@@ -184,6 +193,7 @@ if (!defined('BASEPATH'))exit('No direct script access allowed');
 
 	public function m_jurnal($tgl_awal,$tgl_akhir)
 	{
+		$id_cabang=$this->session->userdata('id_cabang');
 		$q = $this->db->query("
 							SELECT a.*,
 								IFNULL(a.debet,0)-IFNULL(a.kredit,0) AS saldo
@@ -206,6 +216,7 @@ if (!defined('BASEPATH'))exit('No direct script access allowed');
 										SELECT a.*,(a.tgl_update) AS tanggal,b.nama,b.jenis FROM `tbl_transaksi` a 
 										INNER JOIN tbl_group_transaksi b 
 										ON a.id_group=b.id
+										WHERE a.id_cabang='$id_cabang'
 										)a
 										WHERE (a.jumlah*1)<>0
 									)a 
@@ -220,6 +231,7 @@ if (!defined('BASEPATH'))exit('No direct script access allowed');
 
 	public function m_jurnal_pelanggan($id_pelanggan)
 	{
+		$id_cabang=$this->session->userdata('id_cabang');
 		$q = $this->db->query("
 							SELECT a.*,
 								IFNULL(a.debet,0)-IFNULL(a.kredit,0) AS saldo
@@ -246,6 +258,7 @@ if (!defined('BASEPATH'))exit('No direct script access allowed');
 										SELECT a.*,(a.tgl_update) AS tanggal,b.nama,b.jenis FROM `tbl_transaksi` a 
 										INNER JOIN tbl_group_transaksi b 
 										ON a.id_group=b.id
+										WHERE a.id_cabang='$id_cabang'
 										)a
 										WHERE (a.jumlah*1)<>0
 									)a 
@@ -262,6 +275,7 @@ if (!defined('BASEPATH'))exit('No direct script access allowed');
 
 	public function m_laba($tgl_awal,$tgl_akhir)
 	{
+		$id_cabang=$this->session->userdata('id_cabang');
 		$q = $this->db->query("
 							SELECT a.*,
 								IFNULL(a.debet,0)-IFNULL(a.kredit,0) AS saldo
@@ -288,7 +302,7 @@ if (!defined('BASEPATH'))exit('No direct script access allowed');
 										SELECT a.*,(a.tgl_update) AS tanggal,b.nama,b.jenis FROM `tbl_transaksi` a 
 										INNER JOIN tbl_group_transaksi b 
 										ON a.id_group=b.id
-                                        WHERE b.id NOT IN(1,5,11,9)
+                                        WHERE b.id NOT IN(1,5,11,9) AND  a.id_cabang='$id_cabang'
 										)a
 										WHERE (a.jumlah*1)<>0
 									)a 
@@ -304,6 +318,7 @@ if (!defined('BASEPATH'))exit('No direct script access allowed');
 
 	public function m_detail_arus_kas($id_group,$tgl_awal,$tgl_akhir)
 	{
+		$id_cabang=$this->session->userdata('id_cabang');
 		$q = $this->db->query("
 							SELECT a.*,
 								IFNULL(a.debet,0)-IFNULL(a.kredit,0) AS saldo
@@ -327,6 +342,7 @@ if (!defined('BASEPATH'))exit('No direct script access allowed');
 										SELECT a.*,DATE(a.tgl_update) AS tanggal,b.nama,b.jenis FROM `tbl_transaksi` a 
 										INNER JOIN tbl_group_transaksi b 
 										ON a.id_group=b.id
+										WHERE a.id_cabang='$id_cabang'
 										)a
 										WHERE (a.jumlah*1)<>0
 									)a 
@@ -342,6 +358,7 @@ if (!defined('BASEPATH'))exit('No direct script access allowed');
 
 	public function m_saldo_per_paket()
 	{
+		$id_cabang=$this->session->userdata('id_cabang');
 		$q = $this->db->query("
 
 							SELECT
@@ -401,6 +418,7 @@ if (!defined('BASEPATH'))exit('No direct script access allowed');
 							            (
 							                b.id = '1' OR b.id = '2' OR b.id = '5' OR b.id = '7' OR b.id = '8' OR b.id = '9' OR b.id = '10' OR b.id = '12'
 							            )
+							            AND  a.id_cabang='$id_cabang'
 							    ) a
 							WHERE
 							    (a.jumlah * 1) <> 0
@@ -433,6 +451,7 @@ if (!defined('BASEPATH'))exit('No direct script access allowed');
 
 	public function m_detail_arus_kas_paket($id_paket,$tgl_awal,$tgl_akhir)
 	{
+		$id_cabang=$this->session->userdata('id_cabang');
 		$q = $this->db->query("
 							SELECT a.*,
 								IFNULL(a.debet,0)-IFNULL(a.kredit,0) AS saldo
@@ -459,7 +478,7 @@ if (!defined('BASEPATH'))exit('No direct script access allowed');
 											INNER JOIN tbl_group_transaksi b 
 											ON a.id_group=b.id
 											WHERE 
-											(b.id='1' OR b.id='2' OR b.id='5' OR b.id='7' OR b.id = '8' OR b.id='9' OR b.id='10' OR b.id='12')
+											(b.id='1' OR b.id='2' OR b.id='5' OR b.id='7' OR b.id = '8' OR b.id='9' OR b.id='10' OR b.id='12') AND  a.id_cabang='$id_cabang'
 										)a
 										WHERE (a.jumlah*1)<>0
 

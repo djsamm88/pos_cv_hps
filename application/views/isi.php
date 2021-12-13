@@ -13,7 +13,16 @@
       <!--------------------------
         | Your Page Content Here |
         -------------------------->    
-      
+<pre>
+<?php
+$ses_cab = $this->m_cabang->m_data_cabang_by_id($this->session->userdata('id_cabang'));
+echo $this->session->userdata('nama_admin'); 
+echo " - ";
+echo($ses_cab[0]->nama_cabang); 
+echo " - ";
+echo($ses_cab[0]->kode_cabang);
+?>
+</pre>
     
         <?php 
         
@@ -139,7 +148,7 @@
           <?php } ?>
             
 
-          <?php if($this->session->userdata('level') !=5) {?> 
+          <?php if($this->session->userdata('level') !=5 && $this->session->userdata('level') !=7 ) {?> 
       <!-- AREA CHART -->
           <div class="box box-primary">
             <div class="box-header with-border">
@@ -169,6 +178,12 @@
             if($this->session->userdata('level')==5){
 
                 include "isi_pelanggan.php";
+              } 
+
+
+            if($this->session->userdata('level')==7){
+
+                include "isi_sales.php";
               } 
             ?> 
 

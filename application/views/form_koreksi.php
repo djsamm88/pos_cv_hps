@@ -36,7 +36,7 @@
             <div style="clear: both;"></div><br>
             <div class="col-sm-3">Tanggal</div>
             <div class="col-sm-6">
-                <input type="text" name="tanggal_kesalahan" id="tanggal_kesalahan" class="form-control datepicker" required="required">
+                <input type="text" name="tanggal_kesalahan" id="tanggal_kesalahan" class="form-control datepicker" required="required" autocomplete="off">
                 <small><i>Masukkan tanggal transaksi yang salah.</i></small>
             </div>
             <div class="col-sm-3"><button type="button" class="btn btn-info" id="cari_tanggal">Cari</button></div>

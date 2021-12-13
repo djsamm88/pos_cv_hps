@@ -66,7 +66,7 @@ class Login extends CI_Controller {
 		$user = $this->gas($this->input->post('user_admin'));
 		$pass = md5($this->input->post('pass_admin'));
 
-		$bool = $this->m_login->cek_user($user,$pass);
+		$bool = $this->m_login->cek_user($user,$pass); 
 
 		//var_dump($bool);	
 
@@ -88,7 +88,7 @@ class Login extends CI_Controller {
 					$sess_data['id_admin'] 		= $sess->id_admin;					
 					$sess_data['level'] 		= $sess->level;		
 					$sess_data['email_admin']	= $sess->email_admin;		
-					//$sess_data['id_desa']		= $sess->id_desa;
+					$sess_data['id_cabang']		= $sess->id_cabang;
 					$sess_data['nama_admin']	= $sess->nama_admin;
 
 					$this->session->set_userdata($sess_data);

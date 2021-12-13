@@ -3,7 +3,7 @@
     <section class="content-header">
       <h1 id="judul">
         Selamat datang di Sistem Informasi 
-        <small>UMROH</small>
+        
       </h1>      
     </section>
 
@@ -36,8 +36,8 @@
               <th>No</th>
               <th width="10px">Id Barang</th>                         
               <th>Barang</th>                     
-              <th>Masuk</th>                                                                    
-              <th class='warning'>Qty</th>                     
+              <th>Qty Pesanan</th>                                                                    
+              <th class='warning'>Qty Masuk (Pcs)</th>                     
               <th class='warning'>Gudang</th>                     
               <th class='warning'>Act</th>
               
@@ -49,19 +49,32 @@
         $no = 0;
         $gud = "";
         foreach ($gudang as $g) {
-          $gud.="<option value='$g->id_gudang'>$g->nama_gudang</option>";
+          $gud.="<option value='$g->id_gudang'>$g->kode_cabang - $g->nama_cabang - $g->nama_gudang</option>";
         }
         foreach($all as $x)
         {
           $no++;
             
+          if($x->satuan == 'koli')
+          {
+            $jum = $x->jumlah*$x->jum_per_koli;
+          }
+          if($x->satuan == 'lusin')
+          {
+            $jum = $x->jumlah*$x->jum_per_lusin;
+          }
+          if($x->satuan == 'retail')
+          {
+            $jum = $x->jumlah*1;
+          }
+
             echo (" 
               
               <tr>
                 <td>$no</td>
                 <td id='id_barang'>$x->id</td>
                 <td>$x->nama_barang</td>    
-                <td id='qty_awal'>$x->masuk</td>    
+                <td id='qty_awal'>$x->jumlah - $x->satuan <br>($jum pcs)</td>    
                          
                 <td class='warning'>
                   <input class='form-control' name='qty' type='number' id='qty'>                  

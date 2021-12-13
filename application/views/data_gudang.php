@@ -34,6 +34,7 @@
               <th>No</th>
                <th width="100px">id_gudang</th>
                 <th>nama_gudang</th>                
+                <th>Cabang</th>                
               <th>Action</th>
               
         </tr>
@@ -57,6 +58,7 @@
                 <td>$no</td>
                 <td>$x->id_gudang</td>
                 <td>$x->nama_gudang</td>                          
+                <td>$x->kode_cabang - $x->nama_cabang</td>                          
                 <td>
                   $btn
                 </td>
@@ -102,6 +104,23 @@
             </div>
             <div style="clear:both"></div>
             <br>
+
+            <div class="col-sm-4">Cabang</div>
+            <div class="col-sm-8">
+              <select name="id_cabang" id="id_cabang" class="form-control">
+                  <option value=""> --- pilih Cabang --- </option>
+                  <?php 
+                    $data_cabang = $this->m_cabang->m_data_cabang();
+                    foreach($data_cabang as $cabang)
+                    {
+                      echo "
+                        <option value='$cabang->id_cabang'>$cabang->kode_cabang - $cabang->nama_cabang</option>
+                      ";
+                    }
+                  ?>                  
+              </select>
+            </div>
+            <div style="clear: both;"></div><br>
 
             <div id="t4_info_form"></div>
             <button type="submit" class="btn btn-primary"> Simpan </button>
@@ -150,6 +169,7 @@ function edit_admin(id_gudang)
     //console.log(e[0].id_desa);
     $("#id_gudang").val(e[0].id_gudang);
     $("#nama_gudang").val(e[0].nama_gudang);    
+    $("#nama_cabang").val(e[0].nama_cabang);    
     
   })
   $("#myModal").modal('show');

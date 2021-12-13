@@ -12,9 +12,19 @@ if (!defined('BASEPATH'))exit('No direct script access allowed');
 
 
 
-	public function m_data()
+	public function m_data($id_cabang=null)
 	{
-		$q = $this->db->query("SELECT a.* FROM tbl_gudang a ");
+		
+		
+		if($id_cabang==null)
+		{
+			$where="";
+		}else{
+			
+			$where="WHERE a.id_cabang='$id_cabang'";
+		}
+		
+		$q = $this->db->query("SELECT a.*,b.* FROM tbl_gudang a LEFT JOIN tbl_cabang b ON a.id_cabang=b.id_cabang $where");
 		return $q->result();
 	}
 
@@ -23,7 +33,7 @@ if (!defined('BASEPATH'))exit('No direct script access allowed');
 	{
 		$q = $this->db->query("SELECT a.*
 									FROM tbl_gudang a 
-									
+									LEFT JOIN tbl_cabang b ON a.id_cabang=b.id_cabang
 									WHERE a.id_gudang='$id_gudang'
 							  ");
 		return $q->result();

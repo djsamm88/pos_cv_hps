@@ -62,8 +62,8 @@
                   <select name="id_gudang" class="form-control" required="">
                       <option value="">--- Pilih Gudang ---</option>
                       <?php 
-                        foreach ($this->m_gudang->m_data() as $gud) {
-                          echo "<option value='$gud->id_gudang'>$gud->nama_gudang</option>";
+                        foreach ($this->m_gudang->m_data($this->session->userdata('id_cabang')) as $gud) {
+                          echo "<option value='$gud->id_gudang'>$gud->kode_cabang - $gud->nama_cabang - $gud->nama_gudang</option>";
                         }
                       ?>
                   </select>

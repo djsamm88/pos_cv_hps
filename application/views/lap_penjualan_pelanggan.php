@@ -29,11 +29,32 @@
         <div class="box-body">
           <div class="alert alert-info">
           <form id="go_trx_jurnal">
-              <div class="col-sm-3">
+              <div class="col-sm-2">
                   <input type="text" class="form-control datepicker" name="mulai" id="mulai"  value="<?php echo $mulai ?>" autocomplete="off">
               </div>
-              <div class="col-sm-3">
+              <div class="col-sm-2">
                 <input type="text" class="form-control datepicker" name="selesai" id="selesai"  value="<?php echo $selesai ?>" autocomplete="off">
+              </div>
+
+              <div class="col-sm-3">
+                <select name="id_pelanggan" id="id_pelanggan" class="form-control">
+                  <option value=""> --- pilih Pelanggan --- </option>
+                  <?php 
+                    
+                    foreach($pelanggan as $pel)
+                    {
+                      if($pel->id_pelanggan==$id_pelanggan)
+                      {
+                        $sel="selected";
+                      }else{
+                        $sel="";
+                      }
+                      echo "
+                        <option value='$pel->id_pelanggan' $sel>$pel->id_pelanggan - $pel->nama_pembeli</option>
+                      ";
+                    }
+                  ?>                  
+              </select>
               </div>
 
               <div class="col-sm-3">
@@ -56,6 +77,8 @@
                   ?>                  
               </select>
               </div>
+
+
               <div class="col-sm-2">
                 <input type="submit" class="btn btn-primary btn-block" value="Go">
               </div>
@@ -158,13 +181,14 @@ $("#go_trx_jurnal").on("submit",function(){
     var mulai   = $("#mulai").val();
     var selesai  = $("#selesai").val();
     var id_cabang  = $("#id_cabang").val();
+    var id_pelanggan  = $("#id_pelanggan").val();
     if( (new Date(mulai).getTime() > new Date(selesai).getTime()))
     {
       alert("Perhatikan pengisian tanggal. Ada yang salah.");
       return false;
     }
 
-    eksekusi_controller('<?php echo base_url()?>index.php/barang/lap_penjualan/?mulai='+mulai+'&selesai='+selesai+'&id_cabang='+id_cabang,'Laporan Penjualan');
+    eksekusi_controller('<?php echo base_url()?>index.php/barang/lap_penjualan_pelanggan/?id_pelanggan='+id_pelanggan+'&mulai='+mulai+'&selesai='+selesai+'&id_cabang='+id_cabang,'Laporan Penjualan');
   return false;
 })
 

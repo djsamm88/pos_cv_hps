@@ -69,16 +69,15 @@
         <tr>
               
               <th>No</th>                    
+              <th>Nama Barang</th>                     
+              <th>Kepada</th>                                             
+              <th>Jumlah</th>                                               
+              <th>Harga</th>                                               
+              <th>Kode Trx.</th>                     
+              
               <th>Kasir</th>                     
               <th>Tanggal</th>                                               
-              <th>Kode Trx.</th>                     
-              <th>Kepada</th>                     
-              <th>Sub Total</th>                     
-              <th>Diskon</th>                     
-              <th>Ekspedisi</th>                     
-              <th>Transport Ke Ekspedisi</th>                     
-              <th>Saldo</th>                     
-              <th>Total</th>                     
+                           
               <th>Struk</th>                     
               
               
@@ -90,24 +89,23 @@
         $no = 0;
         foreach($all as $x)
         {
-          $total = $x->total-$x->saldo-$x->diskon+($x->harga_ekspedisi+$x->transport_ke_ekspedisi);
-          $total_all+=$total;
+          //$total = $x->total-$x->saldo-$x->diskon+($x->harga_ekspedisi+$x->transport_ke_ekspedisi);
+          //$total_all+=$total;
           $no++;
             
             echo (" 
               
               <tr>
                 <td>$no</td>                
+                <td>$x->nama_barang - $x->id_barang</td>                                
+                <td>$x->nama_pembeli -[$x->id_pelanggan]</td>                                        
+                <td>".($x->qty_jual)."</td>
+                <td>".rupiah($x->harga_jual)."</td>
+                <td>$x->grup_penjualan</td>                
+                
                 <td>".($x->nama_admin)." <br>".($x->email_admin)."</td>
                 <td>".($x->tgl_transaksi)."</td>
-                <td>$x->grup_penjualan</td>                
-                <td>$x->nama_pembeli -[ $x->id_pelanggan ]</td>                
-                <td align=right>".rupiah($x->total)."</td>                
-                <td align=right>".rupiah($x->diskon)."</td>                
-                <td align=right>".rupiah($x->harga_ekspedisi)."</td>                
-                <td align=right>".rupiah($x->transport_ke_ekspedisi)."</td>                
-                <td align=right>".rupiah($x->saldo)."</td>                
-                <td align=right>".rupiah($total)."</td>                
+                                
                 <td><a href='".base_url()."index.php/barang/struk_penjualan/".$x->grup_penjualan."' target='blank'>Print</a></td>                                
               </tr>
           ");
@@ -117,12 +115,7 @@
         
         ?>
       </tbody>
-       <tfoot>
-             <tr>
-                <th colspan='10' style='text-align:right'><b>Total</b></th>
-                <th style='text-align:right'><b>Rp.<?php echo rupiah($total_all)?></b></th>
-             </tr>
-           </tfoot>
+       
   </table>
 </div>
 
@@ -164,7 +157,7 @@ $("#go_trx_jurnal").on("submit",function(){
       return false;
     }
 
-    eksekusi_controller('<?php echo base_url()?>index.php/barang/lap_penjualan/?mulai='+mulai+'&selesai='+selesai+'&id_cabang='+id_cabang,'Laporan Penjualan');
+    eksekusi_controller('<?php echo base_url()?>index.php/barang/lap_barang/?mulai='+mulai+'&selesai='+selesai+'&id_cabang='+id_cabang,'Laporan Penjualan');
   return false;
 })
 
@@ -172,7 +165,7 @@ $("#go_trx_jurnal").on("submit",function(){
 
 $("#download_pdf").on("click",function(){
   var ser = $("#go_trx_jurnal").serialize();
-  var url="<?php echo base_url()?>index.php/barang/lap_penjualan_excel/?"+ser;
+  var url="<?php echo base_url()?>index.php/barang/lap_barang_xl/?"+ser;
   window.open(url);
 
   return false;

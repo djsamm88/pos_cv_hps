@@ -66,6 +66,7 @@ class Laporan_keuangan extends CI_Controller {
 		$serialize = $this->input->post();
 		$serialize['jumlah']=hanya_nomor($serialize['jumlah']);
 		$serialize['id_group']='5';
+		$serialize['id_cabang']=$this->session->userdata('id_cabang');
 		
 		$this->db->set($serialize);
 		$this->db->insert('tbl_transaksi');
@@ -94,6 +95,7 @@ class Laporan_keuangan extends CI_Controller {
 
 		$serialize['id_barang'] = @$q[0]->id_barang;
 		$serialize['id_barang']= $serialize['id_barang']==''?'0':$serialize['id_barang'];
+		$serialize['id_cabang']=$this->session->userdata('id_cabang');
 		unset($serialize['trx_lama']);
 		$this->db->set($serialize);
 		$this->db->insert('tbl_transaksi');
@@ -107,7 +109,7 @@ class Laporan_keuangan extends CI_Controller {
 		$serialize = $this->input->post();
 		$serialize['jumlah']=hanya_nomor($serialize['jumlah']);
 		$serialize['id_group']='11';
-		
+		$serialize['id_cabang']=$this->session->userdata('id_cabang');
 		$this->db->set($serialize);
 		$this->db->insert('tbl_transaksi');
 
@@ -120,6 +122,7 @@ class Laporan_keuangan extends CI_Controller {
 		$data['all'] = $this->m_laporan_keuangan->m_jurnal($tgl_awal,$tgl_akhir);
 		$data['tgl_awal'] = $tgl_awal;
 		$data['tgl_akhir'] = $tgl_akhir;
+		
 		$this->load->view('table_jurnal',$data);
 	}
 

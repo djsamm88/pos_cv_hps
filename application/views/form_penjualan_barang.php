@@ -181,6 +181,8 @@ if(isset($group_penjualan))
         </tr>
 
 
+
+
         <td colspan="7" align="right"><b>Biaya ke ekspedisi</b></td>
           <td  align="right" >
             <input id="t4_transport_ke_ekspedisi" type="text" name="transport_ke_ekspedisi" class="form-control nomor" value="0" style="text-align:right;">
@@ -280,6 +282,18 @@ if(isset($group_penjualan))
           </td>
           <td></td>
         </tr>
+
+
+        
+        <tr>
+          <td colspan="7" align="right"><b>Sales</b></td>
+          <td  align="right" >
+            <input id="id_sales" type="text" name="id_sales" class="form-control " placeholder="id_sales" style="text-align:right;">
+          </td>
+          <td></td>
+        </tr>
+
+
 
       </tfoot>
   </table>
@@ -569,7 +583,7 @@ $( function() {
 
     var semuaBarang = function(request,response){
             console.log(request.term);
-            var serialize = {cari:request.term};
+            var serialize = {cari:request.term}; 
             $.get("<?php echo base_url()?>index.php/barang/json_barang_toko",serialize,
               function(data){
                 /*
@@ -578,7 +592,7 @@ $( function() {
                 */
                 response($.map(data, function(obj) {
                     return {
-                        label: obj.nama_barang,
+                        label: obj.nama_barang +" - "+obj.id,
                         value: obj.id,
                         stok: obj.qty,
                         harga_retail: obj.harga_retail, 
@@ -587,7 +601,10 @@ $( function() {
                         jum_per_koli: obj.jum_per_koli, 
                         jum_per_lusin: obj.jum_per_lusin, 
                         reminder: obj.reminder, 
-                        berat:obj.berat
+                        berat:obj.berat,
+                        nama_barang:obj.nama_barang +" - "+obj.id,
+                        id:obj.id,
+                        qty:obj.qty
                     };
                 }));
                 
@@ -595,21 +612,66 @@ $( function() {
           }
 
     var ii=0;
+
+    var templatenya = function(event, ui) {
+        console.log(ui);        
+        $(this).val('');
+      template_auto(ui.item);
+              ii++;
+              //alert(ii);
+              return false;
+        }
+
+
     $( ".barang" ).autocomplete({
       source: semuaBarang,
       minLength: 1,
+      select: templatenya
 
-      select: function(event, ui) {
-        console.log(ui);        
-        $(this).val('');
+    });
 
-       if(ui.item.stok=="0")
+
+
+
+});
+
+
+/******* ambil data scanner ******/
+
+  $('.barang').on(' keypress', function(e) {
+    var keyCode = e.keyCode || e.which;
+    if (keyCode === 13) { 
+        var term = $(this).val();
+        
+
+        var serialize = {cari:term}; 
+        $.get("<?php echo base_url()?>index.php/barang/json_barang_toko",serialize,
+              function(data){
+                console.log(data[0]);
+
+                var abc = data[0];
+
+                template_auto(abc);
+                total();
+                
+            })
+          }
+
+
+  });
+/******* ambil data auto enter ******/
+
+
+function template_auto(abc)
+{
+
+       if(abc.stok=="0")
        {
-        alert("Stok gudang KOSONG. Item : "+ui.item.label);
+        alert("Stok gudang KOSONG. Item : "+abc.label);
         return false;
        }
 
-       if(ui.item.stok<ui.item.reminder)
+       if(abc.stok<abc.reminder)
        {
         //notif();//notif ini dari footer welcome
        }
@@ -618,9 +680,9 @@ $( function() {
                       "<option value='lusin'>Lusin</option>"+
                       "<option value='koli'>Koli</option>";
 
-      var stok          = parseInt(ui.item.stok);
-      var jum_per_lusin = parseInt(ui.item.jum_per_lusin);
-      var jum_per_koli  = parseInt(ui.item.jum_per_koli);
+      var stok          = parseInt(abc.stok);
+      var jum_per_lusin = parseInt(abc.jum_per_lusin);
+      var jum_per_koli  = parseInt(abc.jum_per_koli);
       
 
       if(stok<jum_per_lusin){
@@ -641,28 +703,28 @@ $( function() {
 
        
                   
-       var pilih_satuan = "<select name='satuan_jual[]' class='form-control' id='pilihSatuan' onchange='gantiHarga("+ui.item.harga_retail+","+ui.item.harga_lusin+","+ui.item.harga_koli+","+ui.item.jum_per_koli+","+ui.item.jum_per_lusin+",$(this))'>"+
+       var pilih_satuan = "<select name='satuan_jual[]' class='form-control' id='pilihSatuan' onchange='gantiHarga("+abc.harga_retail+","+abc.harga_lusin+","+abc.harga_koli+","+abc.jum_per_koli+","+abc.jum_per_lusin+",$(this))'>"+
                           option+
                          "</select>";
 
-        var jum_batas = "<input id='jum_per_koli' type='hidden' value='"+ui.item.jum_per_koli+"'>"+
-                        "<input id='jum_per_lusin' type='hidden' value='"+ui.item.jum_per_lusin+"'>"+
-                        "<input id='id_barang' name='id_barang[]' type='hidden' value='"+ui.item.value+"'>";
+        var jum_batas = "<input id='jum_per_koli' type='hidden' value='"+abc.jum_per_koli+"'>"+
+                        "<input id='jum_per_lusin' type='hidden' value='"+abc.jum_per_lusin+"'>"+
+                        "<input id='id_barang' name='id_barang[]' type='hidden' value='"+abc.value+"'>";
 
         var template = "<tr>"+                
-                "<td>"+jum_batas+ui.item.value+"</td>"+
-                "<td id='stoknya'>"+ui.item.stok+"</td>"+
-                "<td id='nama_barang'>"+ui.item.label+"</td>"+
-                "<td align='right' id='t4_berat'>"+ui.item.berat+"</td>"+
+                "<td>"+jum_batas+abc.id+"</td>"+
+                "<td id='stoknya'>"+abc.qty+"</td>"+
+                "<td id='nama_barang'>"+abc.nama_barang+"</td>"+
+                "<td align='right' id='t4_berat'>"+abc.berat+"</td>"+
                 "<td>"+pilih_satuan+"</td>"+
                 "<td align='right'>"+
-                  "<input  id='t4_harga' class='form-control' readonly name='harga_jual[]' value='"+formatRupiah(ui.item.harga_retail)+"'>"+
+                  "<input  id='t4_harga' class='form-control' readonly name='harga_jual[]' value='"+formatRupiah(abc.harga_retail)+"'>"+
                 "</td>"+
                 "<td>"+
                 "<input class='form-control' type='number' id='jumlah_beli' name='jumlah[]'  placeholder='qty' required value='1' >"+
                 "</td>"+
-                "<td align='right' id='t4_sub_total'>"+ui.item.harga_retail+"</td>"+
-                "<td align='right' id='t4_sub_berat'>"+ui.item.berat+"</td>"+
+                "<td align='right' id='t4_sub_total'>"+abc.harga_retail+"</td>"+
+                "<td align='right' id='t4_sub_berat'>"+abc.berat+"</td>"+
                           
                           
                   "<td><button class='btn btn-danger btn-xs' id='remove_order' type='button'>Hapus</button></td></tr>"
@@ -671,15 +733,9 @@ $( function() {
                   $(".barang").val("");
                   
                   //console.log(template);
-              ii++;
-              //alert(ii);
-              return false;
-        }
+              
 
-    });
-
-
-});
+}
 
 function gantiHarga(a,b,c,d,e,ini)
 {

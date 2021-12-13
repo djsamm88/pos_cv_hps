@@ -9,10 +9,18 @@ if (!defined('BASEPATH'))exit('No direct script access allowed');
 			$this->load->helper('custom_func');
 		}
 
-
+ 
 	public function m_data_admin()
 	{
-		$q = $this->db->query("SELECT a.* FROM tbl_admin a ");
+		$q = $this->db->query("SELECT a.*,b.* FROM tbl_admin a LEFT JOIN tbl_cabang b ON a.id_cabang=b.id_cabang ");
+		return $q->result();
+	}
+
+
+ 
+	public function m_data_sales()
+	{
+		$q = $this->db->query("SELECT a.*,b.* FROM tbl_admin a LEFT JOIN tbl_cabang b ON a.id_cabang=b.id_cabang WHERE a.level='7'");
 		return $q->result();
 	}
 

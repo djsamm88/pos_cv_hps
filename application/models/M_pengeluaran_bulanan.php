@@ -13,7 +13,9 @@ if (!defined('BASEPATH'))exit('No direct script access allowed');
 
 	public function m_data()
 	{
+		$id_cabang = $this->session->userdata('id_cabang');
 		$q = $this->db->query("SELECT * FROM tbl_pengeluaran_bulanan 							
+								
 								ORDER BY id ASC
 					");
 		return $q->result();
@@ -21,8 +23,10 @@ if (!defined('BASEPATH'))exit('No direct script access allowed');
 
 	public function m_trx_pengeluaran_bulanan()
 	{
+		$id_cabang = $this->session->userdata('id_cabang');
 		$q = $this->db->query("SELECT a.*
 								FROM `tbl_pengeluaran_bulanan_transaksi` a 								
+								WHERE id_cabang='$id_cabang'
 								ORDER BY tgl_update DESC
 							 ");
 		return $q->result();

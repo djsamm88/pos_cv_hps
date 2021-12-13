@@ -82,8 +82,8 @@ td {
                 <td>$no</td>
                 <td>$x->tgl</td>
                 <td>$x->nama_barang</td>
-                <td>$x->nama_gudang_lama</td>
-                <td>$x->nama_gudang_baru</td>
+                <td>$x->kode_cabang_lama - $x->cabang_lama | $x->nama_gudang_lama</td>
+                <td>$x->kode_cabang_baru - $x->cabang_baru | $x->nama_gudang_baru</td>
                 <td>$x->jumlah</td>
                 <td>$x->nama_admin</td>
                 <td>$x->catatan</td>

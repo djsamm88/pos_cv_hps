@@ -29,11 +29,31 @@
         <div class="box-body">
           <div class="alert alert-info">
           <form id="go_trx_jurnal">
-              <div class="col-sm-5">
-                  <input type="text" class="form-control datepicker" name="mulai" id="mulai"  value="<?php echo $mulai ?>" >
+              <div class="col-sm-3">
+                  <input type="text" class="form-control datepicker" name="mulai" id="mulai"  value="<?php echo $mulai ?>" autocomplete="off">
               </div>
-              <div class="col-sm-5">
-                <input type="text" class="form-control datepicker" name="selesai" id="selesai"  value="<?php echo $selesai ?>">
+              <div class="col-sm-3">
+                <input type="text" class="form-control datepicker" name="selesai" id="selesai"  value="<?php echo $selesai ?>" autocomplete="off">
+              </div>
+               <div class="col-sm-3">
+                <select name="id_cabang" id="id_cabang" class="form-control">
+                  <option value=""> --- pilih Cabang --- </option>
+                  <?php 
+                    $data_cabang = $this->m_cabang->m_data_cabang();
+                    foreach($data_cabang as $cabang)
+                    {
+                      if($cabang->id_cabang==$id_cabang)
+                      {
+                        $sel="selected";
+                      }else{
+                        $sel="";
+                      }
+                      echo "
+                        <option value='$cabang->id_cabang' $sel>$cabang->kode_cabang - $cabang->nama_cabang</option>
+                      ";
+                    }
+                  ?>                  
+              </select>
               </div>
               <div class="col-sm-2">
                 <input type="submit" class="btn btn-primary btn-block" value="Go">
@@ -155,13 +175,14 @@ function hapus(grup_penjualan,saldo)
 $("#go_trx_jurnal").on("submit",function(){
     var mulai   = $("#mulai").val();
     var selesai  = $("#selesai").val();
+    var id_cabang  = $("#id_cabang").val();
     if( (new Date(mulai).getTime() > new Date(selesai).getTime()))
     {
       alert("Perhatikan pengisian tanggal. Ada yang salah.");
       return false;
     }
 
-    eksekusi_controller('<?php echo base_url()?>index.php/barang/lap_penjualan/?mulai='+mulai+'&selesai='+selesai,'Laporan Penjualan');
+    eksekusi_controller('<?php echo base_url()?>index.php/barang/lap_penjualan/?mulai='+mulai+'&selesai='+selesai+'&id_cabang='+id_cabang,'Laporan Penjualan');
   return false;
 })
 

@@ -43,6 +43,7 @@
               <th>Qty Masuk</th>                     
               <th>Gudang</th>                     
               <th>Tgl Masuk</th>                     
+              <th>Desk</th>                     
               <th>Act</th>
               
               
@@ -93,6 +94,7 @@
                 </td>
 
                 <td>$x->tgl_masuk</td>
+                <td>$x->deskripsi</td>    
 
                 <td>
                   <button class='btn btn-danger btn-xs' type='button' id='beli' onclick='go_beli($(this))'>Simpan</button>

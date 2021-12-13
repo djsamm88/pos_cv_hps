@@ -15,7 +15,7 @@
 <!-- Default box -->
       <div class="box">
         <div class="box-header with-border">
-          <h3 class="box-title">Data</h3>
+          <h3 class="box-title">Data Perpindahan <?php echo $mulai?> s/d <?php echo $selesai?></h3>
 
           <div class="box-tools pull-right">
             <button type="button" class="btn btn-box-tool" data-widget="collapse" data-toggle="tooltip"
@@ -27,8 +27,24 @@
         </div>
         <div class="box-body">
 
+
+<div class="alert alert-info">
+          <form id="form_log">
+              <div class="col-sm-5">
+                  <input type="text" class="form-control datepicker" name="mulai" id="mulai"  value="<?php echo $mulai ?>" >
+              </div>
+              <div class="col-sm-5">
+                <input type="text" class="form-control datepicker" name="selesai" id="selesai"  value="<?php echo $selesai ?>">
+              </div>
+              <div class="col-sm-2">
+                <input type="submit" class="btn btn-primary btn-block" value="Go">
+              </div>
+          </form>          
+          <div style="clear: both"></div>
+          </div>
+
 <div class="table-responsive">
-<table id="tbl_newsnya" class="table  table-striped table-bordered"  cellspacing="0" width="100%">
+<table id="tbl_newsnya" class="table  table-striped table-bordered"  cellspacing="0" width="100%" border="1">
       <thead>
         <tr>
               
@@ -61,8 +77,8 @@
                 <td>$no</td>
                 <td>$x->tgl</td>
                 <td>$x->nama_barang</td>
-                <td>$x->nama_gudang_lama</td>
-                <td>$x->nama_gudang_baru</td>
+                <td>$x->kode_cabang_lama - $x->cabang_lama - $x->nama_gudang_lama</td>
+                <td>$x->kode_cabang_baru - $x->cabang_baru - $x->nama_gudang_baru</td>
                 <td>$x->jumlah</td>
                 <td>$x->nama_admin</td>
                 <td>$x->catatan</td>
@@ -77,6 +93,7 @@
         ?>
       </tbody>
   </table>
+  <input type="button" class="btn btn-primary" value="Download" id="download_pdf">
 </div>
 
 
@@ -88,9 +105,38 @@
 </section>
     <!-- /.content -->
 
-
-
+<?php 
+if($out=='excel')
+die();
+?>
 <script>
+$('.datepicker').datepicker({
+  autoclose: true,
+  format: 'yyyy-mm-dd' 
+})
+
+
+$("#form_log").on("submit",function(){
+    var mulai   = $("#mulai").val();
+    var selesai  = $("#selesai").val();
+    if( (new Date(mulai).getTime() > new Date(selesai).getTime()))
+    {
+      alert("Perhatikan pengisian tanggal. Ada yang salah.");
+      return false;
+    }
+
+    eksekusi_controller('<?php echo base_url()?>index.php/barang/log_pindah_gudang/?mulai='+mulai+'&selesai='+selesai,'Laporan Penjualan');
+  return false;
+})
+
+
+$("#download_pdf").on("click",function(){
+  var ser = $("#form_log").serialize();
+  var url="<?php echo base_url()?>index.php/barang/log_pindah_gudang_excel/?"+ser;
+  window.open(url);
+
+  return false;
+})
 
 $(document).ready(function(){
 

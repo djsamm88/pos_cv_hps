@@ -20,6 +20,8 @@ class Barang extends CI_Controller {
 		$this->load->model('m_pelanggan');
 		$this->load->model('m_ekspedisi');
 		$this->load->model('m_gudang');
+		$this->load->model('m_cabang');
+		$this->load->model('m_admin');
 
 	}
 
@@ -27,7 +29,7 @@ class Barang extends CI_Controller {
 
 	public function form_barang_sementara()
 	{
-		$data['all'] = $this->m_barang->m_data();	
+		$data['all'] = $this->m_barang->barang_masuk_order();	
 		$data['gudang'] = $this->m_gudang->m_data();		
 		$this->load->view('form_barang_sementara',$data);
 		
@@ -35,7 +37,9 @@ class Barang extends CI_Controller {
 
 	public function go_simpan_sementara()
 	{
+		$id_cabang = $this->session->userdata('id_cabang');
 		$serialize = $this->input->post();
+		$serialize['id_cabang'] = $id_cabang;
 		$this->db->set($serialize);
 		$this->db->insert('tbl_barang_masuk_tanpa_harga');
 	}
@@ -43,7 +47,13 @@ class Barang extends CI_Controller {
 
 	public function barang_transaksi()
 	{
-		$data['all'] = $this->m_barang->m_barang_transaksi();			
+		$id_cabang = $this->input->get('id_cabang');
+		$mulai = $this->input->get('mulai');
+		$selesai = $this->input->get('selesai');		
+		$data['mulai']=$mulai;
+		$data['selesai']=$selesai;
+		$data['id_cabang']=$id_cabang;
+		$data['all'] = $this->m_barang->m_barang_transaksi($id_cabang,$mulai,$selesai);			
 		$this->load->view('barang_transaksi',$data);
 	}
 
@@ -59,12 +69,14 @@ class Barang extends CI_Controller {
 	public function go_pending_jual()
 	{
 		$data = $this->input->post();
+		$id_cabang = $this->session->userdata('id_cabang');
 
 		/********* insert pelanggan ************/
 		$arrPelanggan = array(
 				"nama_pembeli" 	=>$data['nama_pembeli'],
 				"hp_pembeli" 	=>$data['hp_pembeli'],
-				"tgl_daftar" 	=>date('Y-m-d H:i:s')
+				"tgl_daftar" 	=>date('Y-m-d H:i:s'),
+				"id_cabang"		=>$id_cabang
 		);
 		if($data['id_pelanggan']=="")
 		{
@@ -129,7 +141,7 @@ class Barang extends CI_Controller {
 
 
 			$serialize['jumlah'] = $data['jumlah'][$key];
-
+			$serialize['id_cabang'] = $id_cabang;
 			/************ insert ke tbl_barang_transaksi *************/
 			$this->m_barang->insert_trx_barang($serialize);
 			/************ insert ke tbl_barang_transaksi *************/
@@ -142,17 +154,62 @@ class Barang extends CI_Controller {
 		echo $data['grup_penjualan'];
 	}
 
+
+
+	//sales
+	public function data_sales($id_admin)
+	{
+		$q = $this->db->query("SELECT * FROM tbl_sales_transaksi WHERE id_sales='$id_admin'");
+		$data['all'] = $q->result();
+		$this->load->view('data_sales',$data);
+	}
+
+	public function data_sales_admin()
+	{
+		$q = $this->db->query("SELECT a.*,b.nama_admin,CONCAT('SALES',b.id_admin) AS id_sales  FROM tbl_sales_transaksi a LEFT JOIN tbl_admin b ON a.id_sales=b.id_admin ORDER BY a.id DESC");
+		$data['all'] = $q->result();
+		$this->load->view('data_sales_admin',$data);
+	}
+
+	public function bayar_sales()
+	{
+		$id = $this->input->post('id');
+		$tgl_bayar = date('Y-m-d H:i:s');
+
+		$this->db->query("UPDATE tbl_sales_transaksi SET status_bayar='lunas',tgl_bayar='$tgl_bayar' WHERE id='$id'");
+
+
+		//masukin ke tbl_transaksi dengan id 20
+
+		$q = $this->db->query("SELECT a.*,b.nama_admin,CONCAT('SALES',b.id_admin) AS id_sales  FROM tbl_sales_transaksi a LEFT JOIN tbl_admin b ON a.id_sales=b.id_admin WHERE a.id='$id'");
+		$all = $q->result();
+
+		$serialize['keterangan'] = "Kepada Sales A.n: ".$all[0]->nama_admin ." - Id Sales:".$all[0]->id_sales ."- Sejumlah: ".$all[0]->jumlah_trx; 
+		$serialize['jumlah'] = $all[0]->jumlah_trx;
+		$serialize['id_group'] = '20';
+		$serialize['id_cabang']=$this->session->userdata('id_cabang');
+		$this->db->set($serialize);
+		$this->db->insert('tbl_transaksi');
+
+	}
+
+
 	public function go_jual()
 	{
+		$id_cabang = $this->session->userdata('id_cabang');
 		$data = $this->input->post();
 		$data['alamat'] = $data['alamat_lengkap']." - ".$data['alamat'];
+
+		
 		unset($data['alamat_lengkap']);
+
 
 		/********* insert pelanggan ************/
 		$arrPelanggan = array(
 				"nama_pembeli" 	=>$data['nama_pembeli'],
 				"hp_pembeli" 	=>$data['hp_pembeli'],
-				"tgl_daftar" 	=>date('Y-m-d H:i:s')
+				"tgl_daftar" 	=>date('Y-m-d H:i:s'),
+				"id_cabang"		=>$id_cabang
 		);
 		if($data['id_pelanggan']=="")
 		{
@@ -230,6 +287,8 @@ class Barang extends CI_Controller {
 
 			$serialize['jumlah'] = $data['jumlah'][$key];
 
+			$serialize['id_cabang'] = $id_cabang;
+
 			/************ insert ke tbl_barang_transaksi *************/
 			$this->m_barang->insert_trx_barang($serialize);
 			/************ insert ke tbl_barang_transaksi *************/
@@ -261,7 +320,8 @@ class Barang extends CI_Controller {
 						"harga_ekspedisi"			=> $serialize['harga_ekspedisi'],
 						"transport_ke_ekspedisi"	=> $serialize['transport_ke_ekspedisi'],
 						"id_referensi"	=> $data['grup_penjualan'],
-						"id_pelanggan"	=> $id_pelanggan
+						"id_pelanggan"	=> $id_pelanggan,
+						"id_cabang"		=> $id_cabang
 					);				
 		/* untuk id_referensi = id_group/id_table*/				
 		$this->db->set($ser_trx);
@@ -275,7 +335,8 @@ class Barang extends CI_Controller {
 						"id_group"=>"9",							
 						"keterangan"=>$ket,
 						"jumlah"=>hanya_nomor($data['diskon']),
-						"id_referensi"=>$data['grup_penjualan']
+						"id_referensi"=>$data['grup_penjualan'],
+						"id_cabang"		=> $id_cabang
 					);	
 			$this->db->set($ser_trx_diskon);
 			$this->db->insert('tbl_transaksi');
@@ -307,11 +368,39 @@ class Barang extends CI_Controller {
 
 			$ser_saldo['id_referensi'] = $data['grup_penjualan'];
 			$ser_saldo['id_pelanggan'] = $id_pelanggan;
+			$ser_saldo['id_cabang']	   = $id_cabang;
 
 			$this->db->set($ser_saldo);
 			$this->db->insert('tbl_transaksi');
 		}
 		
+
+		// sales //
+
+		if($data['id_sales'] != "")
+		{	
+
+
+			$id_sales = preg_replace('/\D/', '', $data['id_sales']);
+
+
+			$q_sales = $this->m_admin->m_data_admin_by_id($id_sales);
+
+			if(count($q_sales)>0)
+			{
+				$persen_sales_hasil = ($q_sales[0]->persen_sales/100)*hanya_nomor($total_tanpa_diskon);
+
+				$arr_sales['grup_penjualan'] = $data['grup_penjualan'];
+				$arr_sales['id_sales'] 		 = $id_sales;
+				$arr_sales['jumlah_trx'] 	 = hanya_nomor($total_tanpa_diskon);
+				$arr_sales['hasil_sales'] 	 = ($persen_sales_hasil);
+				$arr_sales['persen_sales'] 	 = $q_sales[0]->persen_sales;
+
+				$this->db->set($arr_sales);
+				$this->db->insert('tbl_sales_transaksi');
+			}
+		}
+
 		
 		//utang/piutang
 
@@ -383,10 +472,144 @@ class Barang extends CI_Controller {
 	    $this->db->query("DELETE FROM tbl_barang_transaksi WHERE grup_penjualan='$grup_penjualan'");
 	}
 
+	public function form_pembelian()
+	{
+		$data['all'] = $this->m_barang->m_data_gudang(1,1)->result();		
+		$data['pelanggan'] = $this->m_pelanggan->m_data($this->session->userdata('id_cabang'));	
+		$data['eksepedisi'] = $this->m_ekspedisi->m_data();	
+
+		$this->load->view('form_pembelian',$data);
+	}
+
+	public function go_beli_suplier()
+	{
+		$data = ($this->input->post());
+		
+		$save['group_trx']  = date('ymdHis')."_".$this->session->userdata('id_admin');
+		$save['id_cabang']  = $this->session->userdata('id_cabang');
+		$save['id_admin']  = $this->session->userdata('id_admin');
+		$save['status']='Mulai';
+		$save['tgl']=date('Y-m-d H:i:s');
+
+		for ($i=0; $i < count($data['id_barang']); $i++) { 
+			//echo $data['id_barang'][$i];
+
+			$save['nama_suplier'] 	= $data['nama_suplier'];
+			$save['hp_suplier'] 	= $data['hp_suplier'];
+			$save['keterangan'] 	= $data['keterangan'];
+			$save['alamat_suplier'] = $data['alamat_suplier'];
+
+			$save['id_barang']  = $data['id_barang'][$i];
+			$save['jumlah'] 	= $data['jumlah'][$i];
+			$save['satuan'] 	= $data['satuan'][$i];
+			
+
+			$this->db->set($save);
+			$this->db->insert('tbl_pembelian_barang');
+			$id = $this->db->insert_id();
+
+
+
+		}
+		echo $save['group_trx'];
+
+	}
+
+	public function update_status_order()
+	{
+		$data = $this->input->post();
+		$group_trx = $data['group_trx'];
+
+		$this->db->set($data);
+		$this->db->where('group_trx',$group_trx);
+		$this->db->update('tbl_pembelian_barang');
+	}
+
+	public function selesai_status_order($group_trx)
+	{
+		
+		$data['status']='Masuk';
+
+		$this->db->set($data);
+		$this->db->where('group_trx',$group_trx);
+		$this->db->update('tbl_pembelian_barang');
+	}
+
+	public function print_pembelian()
+	{
+		$group_trx = $this->input->get('group_trx');
+
+
+		$data['trx'] = $this->m_barang->print_pembelian($group_trx);
+
+
+
+		//var_dump($staff_arr);
+		$filename = "slip_pembelian_".$this->router->fetch_class()."_".date('d_m_y_h_i_s');
+		
+		// As PDF creation takes a bit of memory, we're saving the created file in /downloads/reports/
+		$pdfFilePath = FCPATH."/downloads/$filename.pdf";
+		
+		 //$html = $this->load->view('slip_pembayaran.php',$data);
+    
+    	//echo json_encode($data);
+    	//$this->load->view('template/part/laporan_pdf.php',$data);
+    	
+    	
+		if (file_exists($pdfFilePath) == FALSE)
+		{
+			//ini_set('memory_limit','512M'); // boost the memory limit if it's low <img class="emoji" draggable="false" alt="" src="https://s.w.org/images/core/emoji/72x72/1f609.png">
+        	ini_set('memory_limit', '2048M');
+			//$html = $this->load->view('laporan_mpdf/pdf_report', $data, true); // render the view into HTML
+			$html = $this->load->view('print_pembelian.php',$data,true);
+			
+			$this->load->library('pdf_potrait'); 
+			$pdf = $this->pdf_potrait->load();
+			//$this->load->library('pdf');
+			//$pdf = $this->pdf->load();
+
+			$pdf->SetFooter($_SERVER['HTTP_HOST'].'|{PAGENO}|'.date("YmdHis")."_".$this->session->userdata('id_admin')); // Add a footer for good measure <img class="emoji" draggable="false" alt="" src="https://s.w.org/images/core/emoji/72x72/1f609.png">
+			$pdf->WriteHTML($html); // write the HTML into the PDF
+			$pdf->Output($pdfFilePath, 'F'); // save to file because we can
+		}
+		 
+		redirect(base_url()."downloads/$filename.pdf","refresh");
+		
+		
+
+	}
+
+	public function tbl_pembelian_barang()
+	{
+		$mulai = $this->input->get('mulai');
+		$selesai = $this->input->get('selesai');
+		$id_cabang = $this->input->get('id_cabang');
+		$data['all'] = $this->m_barang->tbl_pembelian_barang($id_cabang);
+		$data['mulai']=$mulai;
+		$data['selesai']=$selesai;
+		$data['id_cabang']=$id_cabang;
+
+		$this->load->view('tbl_pembelian_barang',$data);
+	}
+
+	public function history_tbl_pembelian_barang()
+	{
+		$mulai = $this->input->get('mulai');
+		$selesai = $this->input->get('selesai');
+		$id_cabang = $this->input->get('id_cabang');
+		$data['all'] = $this->m_barang->history_tbl_pembelian_barang($id_cabang);
+		$data['mulai']=$mulai;
+		$data['selesai']=$selesai;
+		$data['id_cabang']=$id_cabang;
+
+		$this->load->view('tbl_pembelian_barang',$data);
+
+	}
+
 	public function form_penjualan()
 	{
-		$data['all'] = $this->m_barang->m_data_gudang(1)->result();		
-		$data['pelanggan'] = $this->m_pelanggan->m_data();	
+		$data['all'] = $this->m_barang->m_data_gudang(1,1)->result();		
+		$data['pelanggan'] = $this->m_pelanggan->m_data($this->session->userdata('id_cabang'));	
 		$data['eksepedisi'] = $this->m_ekspedisi->m_data();	
 
 		$this->load->view('form_penjualan_barang',$data);
@@ -418,6 +641,17 @@ class Barang extends CI_Controller {
 		header('Content-Type: application/json');	
 		$query = $this->input->get('cari'); 
 		$data['all'] = $this->m_barang->m_data_gudang_autocomplete(1,$query)->result();
+		echo json_encode($data['all']);
+	}
+
+
+	public	function json_barang_order()
+	{
+		header("Access-Control-Allow-Origin: *");
+		header("Access-Control-Allow-Headers: *");
+		header('Content-Type: application/json');	
+		$query = $this->input->get('cari'); 
+		$data['all'] = $this->m_barang->m_data_beli_autocomplete($query)->result();
 		echo json_encode($data['all']);
 	}
 
@@ -496,6 +730,38 @@ class Barang extends CI_Controller {
 
 	}
 
+	public function data_barcode()
+	{
+		$data['all'] = $this->m_barang->m_data();	
+		$this->load->view('data_barcode',$data);
+	}
+
+	public function get_barcode()
+	{
+		$data = $this->input->post();
+		$y = array();
+		for ($i=0; $i < count($data['id_barang']) ; $i++) { 
+			
+			if(trim($data['jumlah_barcode'][$i]) != ""){
+				//echo $data['jumlah_barcode'][$i];	
+
+				$id 			= $data['id_barang'][$i];
+				$jumlah_barcode = $data['jumlah_barcode'][$i];
+				$is_id 			= $data['is_id'][$i];
+
+				$x['id'] = $id;
+				$x['jumlah_barcode']	= $jumlah_barcode;
+				$x['is_id'] 			= $is_id;
+
+				array_push($y,$x);
+			}
+		}
+
+		//var_dump($y);
+		$z['all'] = $y;
+		$this->load->view('get_barcode',$z);
+	}
+
 
 	public function data_xl()
 	{
@@ -526,6 +792,7 @@ class Barang extends CI_Controller {
 
 	public function barang_baru_dapat_return($id)
 	{
+		$id_cabang = $this->session->userdata('id_cabang');
 		$this->db->query("UPDATE tbl_barang_return SET status='barang_baru' WHERE id='$id'");
 		//update masuk barang
 		$q 	= $this->db->query("SELECT id_barang,jumlah,id_gudang FROM tbl_barang_return WHERE id='$id'");
@@ -536,7 +803,7 @@ class Barang extends CI_Controller {
 		$qty 		= $qqq->jumlah;
 		$id_gudang 	= $qqq->id_gudang;
 
-		$this->db->query("INSERT INTO tbl_barang_masuk_tanpa_harga SET id_barang='$id_barang',qty='$qty',id_gudang='$id_gudang',status='belum'");
+		$this->db->query("INSERT INTO tbl_barang_masuk_tanpa_harga SET id_barang='$id_barang',qty='$qty',id_gudang='$id_gudang',status='belum',id_cabang='$id_cabang'");
 
 		var_dump($qqq);
 		echo "$id";
@@ -546,12 +813,13 @@ class Barang extends CI_Controller {
 
 	public function uang_dapat_return($id)
 	{
+		$id_cabang = $this->session->userdata('id_cabang');
 		$this->db->query("UPDATE tbl_barang_return SET status='uang_kembali' WHERE id='$id'");
 		//id_group=19		
 		$q 	= $this->db->query("SELECT * FROM tbl_barang_return WHERE id='$id'");
 		$qq 		= $q->result();
 		$qqq 		= $qq[0];
-		$this->db->query("INSERT INTO tbl_transaksi SET id_group='19',keterangan='Return uang dari suplier - id_barang =  $qqq->id_barang - $qqq->ket', jumlah='$qqq->uang_kembali'");
+		$this->db->query("INSERT INTO tbl_transaksi SET id_group='19',keterangan='Return uang dari suplier - id_barang =  $qqq->id_barang - $qqq->ket', jumlah='$qqq->uang_kembali', id_cabang='$id_cabang'");
 	}
 
 
@@ -673,6 +941,7 @@ class Barang extends CI_Controller {
 
 	public function go_return_barang()
 	{
+		$id_cabang = $this->session->userdata('id_cabang');
 		$data = $this->input->post();
 		$nama_barang = $data['nama_barang'];
 		$uang_total = hanya_nomor($data['uang_kembali']);
@@ -682,6 +951,7 @@ class Barang extends CI_Controller {
 
 		$data['uang_kembali'] = $uang_total;
 		$data['status']='toko';
+		$data['id_cabang']='$id_cabang';
 
 		$this->db->set($data);
 		$this->db->insert('tbl_barang_return');
@@ -695,29 +965,52 @@ class Barang extends CI_Controller {
 						"id_group"=>"6",							
 						"keterangan"=>$ket,
 						"jumlah"=>($uang_total),
-						"id_referensi"=>$data['id_barang']
+						"id_referensi"=>$data['id_barang'],
+						"id_cabang"=>$id_cabang
 					);				
 		/* untuk id_referensi = id_group/id_table*/				
 		$this->db->set($ser_trx);
 		$this->db->insert('tbl_transaksi');
 		/*********** insert ke transaksi **************/
 
+
+		$insert_baru['nama_barang'] = "RETURN_ ".$nama_barang;
+		$insert_baru['return'] 		= "1";
+
+		$this->db->set($insert_baru);
+		$this->db->insert('tbl_barang');
+		$id_baru = $this->db->insert_id();
+
+		
+		//arahkan ke barang masuk setelah diinsert ke tbl barang
+		$bar_masuk['id_barang'] = $id_baru;
+		$bar_masuk['id_gudang'] = $data['id_gudang'];
+		$bar_masuk['qty'] 		= $data['jumlah'];
+		$bar_masuk['deskripsi'] = $ket;
+		$bar_masuk['id_cabang'] = $id_cabang;
+
+		$this->db->set($bar_masuk);
+		$this->db->insert('tbl_barang_masuk_tanpa_harga');
+
 		/********** jika kondisi=baik masuk ke barang ***************/
+		/*
 		if($data['kondisi']=='baik')
 		{
 			
 			$qty 		= $data['jumlah'];
 			$id_gudang	= $data['id_gudang'];
-			$id_barang 	= $data['id_barang'];
+			$id_barang 	= $id_baru;
 
 			$this->db->query("INSERT INTO tbl_barang_transaksi 
 								SET 
 								jenis='masuk', 
 								jumlah='$qty',								
 								id_barang='$id_barang',
-								id_gudang='$id_gudang'
+								id_gudang='$id_gudang',
+								id_cabang='$id_cabang'
 							");
 		}
+		*/
 		/********** jika kondisi=baik masuk ke barang ***************/
 
 		echo $id_ret;
@@ -726,7 +1019,33 @@ class Barang extends CI_Controller {
 
 	public function log_pindah_gudang()
 	{
-		$data['all'] = $this->m_barang->m_log_pindah_gudang();
+		$mulai = $this->input->get('mulai');
+		$selesai = $this->input->get('selesai');		
+
+		$data['all'] = $this->m_barang->m_log_pindah_gudang($mulai,$selesai);
+		$data['mulai'] = $mulai;
+		$data['selesai'] = $selesai;
+		$data['out']='view';
+		$this->load->view('log_pindah_gudang',$data);
+
+	}
+
+	public function log_pindah_gudang_excel()
+	{
+
+		$mulai = $this->input->get('mulai');
+		$selesai = $this->input->get('selesai');
+
+		$file = "lap_perpindahan-$mulai-$selesai.xls";
+		header("Content-type: application/octet-stream");
+		header("Content-Disposition: attachment; filename=$file");
+		header("Pragma: no-cache");
+		header("Expires: 0");	
+
+		$data['all'] = $this->m_barang->m_log_pindah_gudang($mulai,$selesai);
+		$data['mulai'] = $mulai;
+		$data['selesai'] = $selesai;
+		$data['out']='excel';
 		$this->load->view('log_pindah_gudang',$data);
 
 	}
@@ -769,12 +1088,14 @@ class Barang extends CI_Controller {
 
 	public function pindah_gudang()
 	{
+		
 		$data = $this->input->post();
 
 		$qty 		= $data['jumlah'];
 		$id_gudang	= $data['id_gudang'];		
 		$id_barang 	= $data['id_barang'];
 		$catatan	= $data['catatan'];
+
 
 		//tambah ke gudang baru
 		$this->db->query("INSERT INTO tbl_barang_transaksi 
@@ -783,6 +1104,7 @@ class Barang extends CI_Controller {
 							jumlah='$qty',								
 							id_barang='$id_barang',
 							id_gudang='$id_gudang'
+							
 						");
 
 		//kurangi dari gudang lama
@@ -793,6 +1115,7 @@ class Barang extends CI_Controller {
 							jumlah='$qty',								
 							id_barang='$id_barang',
 							id_gudang='$id_gudang_lama'
+							
 						");
 		
 		//catat log
@@ -812,6 +1135,56 @@ class Barang extends CI_Controller {
 			
 	}
 
+	public function lap_barang()
+	{
+		$mulai = $this->input->get('mulai');
+		$selesai = $this->input->get('selesai');
+		$id_cabang = $this->input->get('id_cabang');
+
+		$id_admin 	= $this->session->userdata('id_admin');
+		$level 		= $this->session->userdata('level');
+
+		if($level=='1')
+		{
+			$id_admin="";
+		}
+
+		$data['mulai'] = $mulai;
+		$data['selesai'] = $selesai;
+		$data['id_cabang'] = $id_cabang;
+
+		$data['all'] = $this->m_barang->m_lap_barang($mulai,$selesai,$id_admin,$id_cabang);	
+		$this->load->view('lap_barang',$data);
+	}
+
+
+	public function lap_barang_xl()
+	{
+		$mulai = $this->input->get('mulai');
+		$selesai = $this->input->get('selesai');
+		$id_cabang = $this->input->get('id_cabang');
+				$file = "laporan_detail_penjualan-$mulai-$selesai.xls";
+		header("Content-type: application/octet-stream");
+		header("Content-Disposition: attachment; filename=$file");
+		header("Pragma: no-cache");
+		header("Expires: 0");	
+
+
+		$id_admin 	= $this->session->userdata('id_admin');
+		$level 		= $this->session->userdata('level');
+
+		if($level=='1')
+		{
+			$id_admin="";
+		}
+
+		$data['mulai'] = $mulai;
+		$data['selesai'] = $selesai;
+		$data['id_cabang'] = $id_cabang;
+
+		$data['all'] = $this->m_barang->m_lap_barang($mulai,$selesai,$id_admin,$id_cabang);	
+		$this->load->view('lap_barang_xl',$data);
+	}
 
 
 
@@ -819,6 +1192,7 @@ class Barang extends CI_Controller {
 	{
 		$mulai = $this->input->get('mulai');
 		$selesai = $this->input->get('selesai');
+		$id_cabang = $this->input->get('id_cabang');
 
 		$id_admin 	= $this->session->userdata('id_admin');
 		$level 		= $this->session->userdata('level');
@@ -830,17 +1204,46 @@ class Barang extends CI_Controller {
 
 		$data['mulai'] = $mulai;
 		$data['selesai'] = $selesai;
+		$data['id_cabang'] = $id_cabang;
 
-		$data['all'] = $this->m_barang->m_lap_penjualan($mulai,$selesai,$id_admin);	
+		$data['all'] = $this->m_barang->m_lap_penjualan($mulai,$selesai,$id_admin,$id_cabang);	
 		$this->load->view('lap_penjualan',$data);
 	}
 
+
+
+	public function lap_penjualan_pelanggan()
+	{
+		$mulai = $this->input->get('mulai');
+		$selesai = $this->input->get('selesai');
+		$id_cabang = $this->input->get('id_cabang');
+		$id_pelanggan = $this->input->get('id_pelanggan');
+
+		$id_admin 	= $this->session->userdata('id_admin');
+		$level 		= $this->session->userdata('level');
+
+
+		$data['mulai'] = $mulai;
+		$data['selesai'] = $selesai;
+		$data['id_cabang'] = $id_cabang;
+		$data['id_pelanggan'] = $id_pelanggan;
+
+		$data['pelanggan'] = $this->m_pelanggan->m_data();
+
+		$data['all'] = $this->m_barang->m_lap_penjualan_pelanggan($id_pelanggan,$mulai,$selesai,$id_cabang);	
+		$this->load->view('lap_penjualan_pelanggan',$data);
+	}
+
+
+	
+	
 
 
 	public function lap_penjualan_hapus()
 	{
 		$mulai = $this->input->get('mulai');
 		$selesai = $this->input->get('selesai');
+		$id_cabang = $this->input->get('id_cabang');
 
 		$id_admin 	= $this->session->userdata('id_admin');
 		$level 		= $this->session->userdata('level');
@@ -852,8 +1255,9 @@ class Barang extends CI_Controller {
 
 		$data['mulai'] = $mulai;
 		$data['selesai'] = $selesai;
+		$data['id_cabang'] = $id_cabang;
 
-		$data['all'] = $this->m_barang->m_lap_penjualan($mulai,$selesai,$id_admin);	
+		$data['all'] = $this->m_barang->m_lap_penjualan($mulai,$selesai,$id_admin,$id_cabang);	
 		$this->load->view('lap_penjualan_hapus',$data);
 	}
 
@@ -862,6 +1266,7 @@ class Barang extends CI_Controller {
 	{
 		$mulai = $this->input->get('mulai');
 		$selesai = $this->input->get('selesai');
+		$id_cabang = $this->input->get('id_cabang');
 
 		$file = "laporan_penjualan-$mulai-$selesai.xls";
 		header("Content-type: application/octet-stream");
@@ -879,8 +1284,9 @@ class Barang extends CI_Controller {
 
 		$data['mulai'] = $mulai;
 		$data['selesai'] = $selesai;
+		$data['id_cabang'] = $id_cabang;
 
-		$data['all'] = $this->m_barang->m_lap_penjualan($mulai,$selesai,$id_admin);	
+		$data['all'] = $this->m_barang->m_lap_penjualan($mulai,$selesai,$id_admin,$id_cabang);	
 		$this->load->view('lap_penjualan_xl',$data);
 	}
 
@@ -890,6 +1296,8 @@ class Barang extends CI_Controller {
 
 	public function lap_pending()
 	{
+		$id_cabang = $this->input->get('id_cabang');
+
 		$id_admin 	= $this->session->userdata('id_admin');
 		$level 		= $this->session->userdata('level');
 
@@ -898,7 +1306,9 @@ class Barang extends CI_Controller {
 			$id_admin="";
 		}
 
-		$data['all'] = $this->m_barang->m_lap_pending($id_admin);	
+		$data['id_cabang'] = $id_cabang;
+
+		$data['all'] = $this->m_barang->m_lap_pending($id_admin,$id_cabang);	
 		$this->load->view('lap_pending',$data);
 	}
 
@@ -920,7 +1330,7 @@ class Barang extends CI_Controller {
 	public function form_penjualan_pending($group_penjualan)
 	{
 
-		$data['all'] = $this->m_barang->m_data_gudang(1)->result();		
+		$data['all'] = $this->m_barang->m_data_gudang(1,$this->session->userdata('id_cabang'))->result();		
 		$data['pelanggan'] = $this->m_pelanggan->m_data();	
 		$data['eksepedisi'] = $this->m_ekspedisi->m_data();	
 		$data['group_penjualan'] = $group_penjualan;
@@ -987,10 +1397,13 @@ class Barang extends CI_Controller {
 
 
 
-	public function stok_gudang($id_gudang)
+	public function stok_gudang()
 	{
-		$data['stok'] = $this->m_barang->m_data_gudang($id_gudang);	
-		$data['gudang'] = $this->m_gudang->m_data();
+		$id_gudang=$this->input->get('id_gudang');
+		$id_cabang=$this->input->get('id_cabang');
+
+		$data['stok'] = $this->m_barang->m_data_gudang($id_gudang,$id_cabang);	
+		$data['gudang'] = $this->m_gudang->m_data($id_cabang);
 
 		/****** array gudang yg kosong *****/
 		$q = $this->m_barang->m_notif_stok();
@@ -1047,6 +1460,7 @@ class Barang extends CI_Controller {
 
 		$id_barang = $this->input->post('id_barang');
 		$id_gudang = $this->input->post('id_gudang');
+		$id_cabang = $this->session->userdata('id_cabang');
 		
 
 
@@ -1058,7 +1472,8 @@ class Barang extends CI_Controller {
 								jumlah='$qty',
 								harga_beli='$harga_beli',
 								id_barang='$id_barang',
-								id_gudang='$id_gudang'
+								id_gudang='$id_gudang',
+								id_cabang='$id_cabang'
 							");			
 		
 		$this->db->query("UPDATE tbl_barang 

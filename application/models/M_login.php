@@ -24,7 +24,8 @@ class M_login extends CI_Model {
 								nama_admin,
 								pass_admin,
 								level,
-								status_admin
+								status_admin,
+								id_cabang
 
 								FROM tbl_admin a 
 
@@ -37,7 +38,8 @@ class M_login extends CI_Model {
 								nama_pembeli AS nama_admin,
 								CONVERT(MD5(password) USING utf8) AS pass_admin,
 								'5' AS level,
-								'1' AS status_admin
+								'1' AS status_admin,
+								id_cabang
 
 								FROM `tbl_pelanggan` WHERE status='member'
 

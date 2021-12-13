@@ -34,6 +34,7 @@
               <th>No</th>
                <th width="100px">id gudang</th>
                 <th>nama gudang</th>
+                <th>Cabang </th>
                 <th>reminder</th>                
                 <th>View</th>                
               
@@ -45,7 +46,7 @@
         $no = 0;
         foreach($gudang as $x)
         {
-          $btn = "<button class='btn btn-warning btn-xs' onclick='tampil($x->id_gudang);return false;'>Tampil</button>";
+          $btn = "<button class='btn btn-warning btn-xs' onclick='tampil($x->id_gudang,$x->id_cabang);return false;'>Tampil</button>";
           $btn .= "<a href='".base_url()."index.php/barang/stok_gudang_xl/$x->id_gudang' class='btn btn-primary btn-xs' target='blank'>Excel</button>";
 
           $yg_warning = $this->m_barang->m_notif_stok($x->id_gudang)->num_rows();
@@ -61,6 +62,7 @@
                 <td>$no</td>
                 <td>$x->id_gudang</td>
                 <td>$x->nama_gudang</td>
+                <td>$x->kode_cabang - $x->nama_cabang </td>
                 <td>$rem</td>                
                 <td>
                   $btn
@@ -176,7 +178,7 @@
                 <option value=''>--- Pilih Gudang tujuan ---</option>
                 <?php 
                   foreach ($this->m_gudang->m_data() as $gud) {
-                    echo "<option value='$gud->id_gudang'>$gud->nama_gudang</option>";
+                    echo "<option value='$gud->id_gudang'>$gud->kode_cabang - $gud->nama_cabang | $gud->nama_gudang </option>";
                   }
                 ?>
               </select>
@@ -271,13 +273,13 @@ $("#form_pindah").on("submit",function(){
 })
 
 
-function tampil(id_gudang)
+function tampil(id_gudang,id_cabang)
 {
-  eksekusi_controller('<?php echo base_url()?>index.php/barang/stok_gudang/'+id_gudang,'Stok Gudang');return false;
+  eksekusi_controller('<?php echo base_url()?>index.php/barang/stok_gudang/?id_gudang='+id_gudang+'&id_cabang='+id_cabang,'Stok Gudang');return false;
 }
 
 
 $("#myModal").on("hidden.bs.modal", function () {
-  eksekusi_controller('<?php echo base_url()?>index.php/barang/stok_gudang/1','Stok Gudang');return false;
+  eksekusi_controller('<?php echo base_url()?>index.php/barang/stok_gudang/?id_gudang=1&id_cabang=<?php echo $this->session->userdata('id_cabang')?>','Stok Gudang');return false;
 });
 </script>
