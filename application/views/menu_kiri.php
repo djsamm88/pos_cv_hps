@@ -11,12 +11,13 @@
         if($this->session->userdata('level')=='1')
         {
         ?>
-
+        <!--
         <li>
           <a href="#" onclick="eksekusi_controller('<?php echo base_url()?>index.php/cabang/data_cabang','Master Cabang');return false;">
             <i class="fa fa-lock"></i> <span>Master Cabang</span>
           </a>
         </li>
+      -->
 
 
         <li>
@@ -63,13 +64,13 @@
             
           </ul>
         </li>
-
+        <!--
          <li>
               <a href="#" onclick="eksekusi_controller('<?php echo base_url()?>index.php/barang/data_sales_admin','Trx Sales Hasil');return false;">
                 <i class="fa fa-link"></i> <span>Trx Sales</span>
               </a>
             </li>
-
+        -->
 
 
 

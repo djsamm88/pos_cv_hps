@@ -29,7 +29,7 @@ if (!defined('BASEPATH'))exit('No direct script access allowed');
 		return $kode_cabang;
 	}
 
-
+ 
 	public function m_data_cabang()
 	{
 		$id_cabang 	= $this->session->userdata('id_cabang');

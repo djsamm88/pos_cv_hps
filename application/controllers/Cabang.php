@@ -60,7 +60,7 @@ class Cabang extends CI_Controller {
 			die('1');
 		}else{
 			$kode_cabang_angka = sprintf("%03d", $id_cabang);
-			$kode_cabang = "TAM".$kode_cabang_angka;
+			$kode_cabang = "CAB".$kode_cabang_angka;
 			$serialize['kode_cabang'] = $kode_cabang;
 
 				$this->m_cabang->update_cabang($serialize,$id_cabang);

@@ -26,17 +26,6 @@ echo($ses_cab[0]->kode_cabang);
     
         <?php 
         
-        if($this->session->userdata('level')=='1' || $this->session->userdata('level')=='3')
-        {
-            ?>
-            <div class="row">
-              <div id="t4_chat_kontak_all"></div>
-              <div id="t4_chat_kasir"></div>
-              
-            </div>
-            <?php 
-
-        }        
 
 
         if($this->session->userdata('level')=='1')
