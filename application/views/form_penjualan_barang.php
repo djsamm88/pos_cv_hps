@@ -827,6 +827,9 @@ $("#tbl_datanya").on("keydown keyup mousedown mouseup select contextmenu drop","
 
 
 
+$("body").on("keydown keyup mousedown mouseup select contextmenu drop",function(){
+  total();
+})
 
 
 $("#t4_diskon,#nama_ekspedisi,#t4_transport_ke_ekspedisi,#t4_ekspedisi,.barang,#nama_pembeli").on("keydown keyup mousedown mouseup select contextmenu drop",function(){

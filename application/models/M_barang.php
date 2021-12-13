@@ -15,14 +15,14 @@ if (!defined('BASEPATH'))exit('No direct script access allowed');
 		return $q->result()[0];
 	}
 
-	public function tbl_pembelian_barang($id_cabang)
+	public function tbl_pembelian_barang($id_cabang,$mulai,$selesai)
 	{
 		$q = $this->db->query("
 				SELECT a.*,b.nama_admin 
 					FROM tbl_pembelian_barang a 
 					LEFT JOIN tbl_admin b 
 					ON a.id_admin=b.id_admin
-					WHERE status<>'Masuk'
+					WHERE status<>'Masuk' AND a.tgl BETWEEN '$mulai' AND '$selesai'
 				GROUP BY a.group_trx
 				ORDER BY a.tgl DESC
 				");
@@ -31,14 +31,14 @@ if (!defined('BASEPATH'))exit('No direct script access allowed');
 	}
 
 
-	public function history_tbl_pembelian_barang($id_cabang)
+	public function history_tbl_pembelian_barang($id_cabang,$mulai,$selesai)
 	{
 		$q = $this->db->query("
 				SELECT a.*,b.nama_admin 
 					FROM tbl_pembelian_barang a 
 					LEFT JOIN tbl_admin b 
 					ON a.id_admin=b.id_admin
-					WHERE status='Masuk'
+					WHERE status='Masuk' AND a.tgl BETWEEN '$mulai' AND '$selesai'
 				GROUP BY a.group_trx
 				ORDER BY a.tgl DESC
 				");

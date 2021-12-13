@@ -27,43 +27,8 @@
           </div>
         </div>
         <div class="box-body">
-          <div class="alert alert-info">
-          <form id="go_trx_jurnal">
-              
-              <div class="col-sm-3">
-                  <input type="text" class="form-control datepicker" name="mulai" id="mulai"  value="<?php echo $mulai ?>" autocomplete="off">
-              </div>
-              <div class="col-sm-3">
-                <input type="text" class="form-control datepicker" name="selesai" id="selesai"  value="<?php echo $selesai ?>" autocomplete="off">
-              </div>
-
-              <div class="col-sm-3">
-                <select name="id_cabang" id="id_cabang" class="form-control">
-                  <option value=""> --- pilih Cabang --- </option>
-                  <?php 
-                    $data_cabang = $this->m_cabang->m_data_cabang();
-                    foreach($data_cabang as $cabang)
-                    {
-                      if($cabang->id_cabang==$this->session->userdata('id_cabang'))
-                      {
-                        $sel="selected";
-                      }else{
-                        $sel="";
-                      }
-                      echo "
-                        <option value='$cabang->id_cabang' $sel>$cabang->kode_cabang - $cabang->nama_cabang</option>
-                      ";
-                    }
-                  ?>                  
-              </select>
-              </div>
-              <div class="col-sm-2">
-                <input type="submit" class="btn btn-primary btn-block" value="Go">
-              </div>
           
-          </form>          
-          <div style="clear: both"></div>
-          </div>
+
 
 <div class="table-responsive">              
 <table id="tbl_newsnya" class="table  table-striped table-bordered"  cellspacing="0" width="100%">
@@ -72,20 +37,10 @@
               
               <th>No</th>                    
               <th>Nama Penjual</th>                     
-              <th>Hp Suplier</th>                                               
-              <th>Kode Trx.</th>                     
-              <th>Total</th>                     
-              <th>Bayar</th>                     
-              <th>Hutang</th>                     
+              <th>Hp Penjual</th>                                               
+              <th>Hutang</th>                                               
               
-              <th>Tgl Trx.</th>                     
-              <th>Update Trx.</th>                     
-              <th>Status.</th>                     
-              <th>Sopir.</th>                     
-              <th>Plat Mobil.</th>                     
-              <th>Keterangan</th>                     
-              <th>Admin</th>                     
-              
+
               <th>Action</th>                     
               
               
@@ -93,24 +48,13 @@
       </thead>
       <tbody>
         <?php
-        $total_all=0;         
+        $total_hutang=0;         
         $no = 0;
         foreach($all as $x)
         {
+          $total_hutang +=$x->hutang;
+          $btn = "<button class='btn btn-warning btn-xs btn-block' onclick='detail_hutang(\"$x->id_penjual\")'>Detail</button>";
           
-          $btn = "<button class='btn btn-warning btn-xs btn-block' onclick='print_pembelian(\"$x->group_trx\")'>Detail</button>";
-          
-          if($x->status=='Mulai')
-          {
-            $btn .= "<button class='btn btn-danger btn-xs btn-block' onclick='update_pembelian(\"$x->group_trx\")'>Update Status</button>";
-            
-          }
-
-          if($x->status=='Gudang')
-          {
-          
-            $btn .= "<button class='btn btn-info btn-xs btn-block' onclick='selesai_pembelian(\"$x->group_trx\")'>Set Selesai</button>";
-          }
           $no++;
             
             echo (" 
@@ -120,18 +64,9 @@
                 
                 <td>$x->nama_penjual</td>                
                 <td>$x->hp_penjual</td>                
-                <td>$x->group_trx</td>                
-                <td>".rupiah($x->total)."</td>                
-                <td>".rupiah($x->bayar)."</td>                
-                <td>".rupiah($x->hutang)."</td>                
-                <td>$x->tgl</td>                
-                <td>$x->tgl_update</td>                
-                <td>$x->status</td>                
-                <td>$x->nama_supir</td>                
-                <td>$x->plat_mobil</td>                
-                <td>$x->keterangan</td>                
-                <td>$x->nama_admin</td>
-
+                <td align=right>".rupiah($x->hutang)."</td>                
+               
+               
                 <td>$btn</td>                                
               </tr>
           ");
@@ -141,12 +76,25 @@
         
         ?>
       </tbody>
+
+       <tfoot>
+        
+          <tr>
+          <td colspan="3" align="right"><b>Total Hutang</b></td>
+          <td  align="right" >
+            <b><?php echo rupiah($total_hutang)?></b>
+          </td>
+          <td></td>
+        </tr>
+
+      </tfoot>
        
   </table>
 </div>
 
-
-        </div>
+  
+  <div id="t4_detail_hutang"></div>
+</div>
 
 
 
@@ -202,7 +150,6 @@
 
 
 
-        <input type="button" class="btn btn-primary" value="Download" id="download_pdf">
 
       </div>
       <!-- /.box -->
@@ -242,6 +189,14 @@ $("#go_trx_jurnal").on("submit",function(){
     eksekusi_controller('<?php echo base_url()?>index.php/barang/tbl_pembelian_barang/?mulai='+mulai+'&selesai='+selesai+'&id_cabang='+id_cabang,'Status Order');
   return false;
 })
+
+function detail_hutang(id_penjual)
+{
+  $.get("<?php echo base_url()?>index.php/barang/detail_hutang/"+id_penjual,function(e){
+    $("#t4_detail_hutang").html(e);
+  })
+}
+
 
 function print_pembelian(group_trx)
 {

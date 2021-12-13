@@ -22,9 +22,9 @@ class Barang extends CI_Controller {
 		$this->load->model('m_gudang');
 		$this->load->model('m_cabang');
 		$this->load->model('m_admin');
+		$this->load->model('m_penjual');
 
 	}
-
 
 
 	public function form_barang_sementara()
@@ -42,6 +42,10 @@ class Barang extends CI_Controller {
 		$serialize['id_cabang'] = $id_cabang;
 		$this->db->set($serialize);
 		$this->db->insert('tbl_barang_masuk_tanpa_harga');
+
+		$id_barang=$serialize['id_barang'];
+		$this->db->query("UPDATE tbl_pembelian_barang SET status='Masuk' WHERE id_barang='$id_barang' AND status='Gudang'");
+
 	}
 
 
@@ -472,6 +476,9 @@ class Barang extends CI_Controller {
 	    $this->db->query("DELETE FROM tbl_barang_transaksi WHERE grup_penjualan='$grup_penjualan'");
 	}
 
+
+	/******* pembelian ******/
+
 	public function form_pembelian()
 	{
 		$data['all'] = $this->m_barang->m_data_gudang(1,1)->result();		
@@ -484,24 +491,40 @@ class Barang extends CI_Controller {
 	public function go_beli_suplier()
 	{
 		$data = ($this->input->post());
+			
+		var_dump($data);
+
 		
+
 		$save['group_trx']  = date('ymdHis')."_".$this->session->userdata('id_admin');
 		$save['id_cabang']  = $this->session->userdata('id_cabang');
 		$save['id_admin']  = $this->session->userdata('id_admin');
 		$save['status']='Mulai';
 		$save['tgl']=date('Y-m-d H:i:s');
 
+		$save['total'] 			= hanya_nomor($data['total']);
+		$save['bayar'] 			= hanya_nomor($data['bayar']);
+		$save['hutang'] 			= hanya_nomor($data['hutang']);
+
+
+
 		for ($i=0; $i < count($data['id_barang']); $i++) { 
 			//echo $data['id_barang'][$i];
 
-			$save['nama_suplier'] 	= $data['nama_suplier'];
-			$save['hp_suplier'] 	= $data['hp_suplier'];
+			$save['id_penjual'] 	= $data['id_penjual'];
+			$save['nama_penjual'] 	= $data['nama_penjual'];
+			$save['hp_penjual'] 	= $data['hp_penjual'];
 			$save['keterangan'] 	= $data['keterangan'];
-			$save['alamat_suplier'] = $data['alamat_suplier'];
+			$save['alamat'] 		= $data['alamat'];
+			$save['jenis_pembayaran'] 	= $data['jenis_pembayaran'];
+
+			
 
 			$save['id_barang']  = $data['id_barang'][$i];
 			$save['jumlah'] 	= $data['jumlah'][$i];
 			$save['satuan'] 	= $data['satuan'][$i];
+			$save['harga'] 		= hanya_nomor($data['harga_pokok'][$i]);
+			$save['sub_total'] 	= hanya_nomor($data['sub_total'][$i]);
 			
 
 			$this->db->set($save);
@@ -584,12 +607,33 @@ class Barang extends CI_Controller {
 		$mulai = $this->input->get('mulai');
 		$selesai = $this->input->get('selesai');
 		$id_cabang = $this->input->get('id_cabang');
-		$data['all'] = $this->m_barang->tbl_pembelian_barang($id_cabang);
+		$data['all'] = $this->m_barang->tbl_pembelian_barang($id_cabang,$mulai,$selesai);
 		$data['mulai']=$mulai;
 		$data['selesai']=$selesai;
 		$data['id_cabang']=$id_cabang;
 
 		$this->load->view('tbl_pembelian_barang',$data);
+	}
+
+
+
+	public function tbl_pembelian_barang_xl()
+	{
+		$file="lap_pembelian_barang.xls";
+		header("Content-type: application/octet-stream");
+		header("Content-Disposition: attachment; filename=$file");
+		header("Pragma: no-cache");
+		header("Expires: 0");	
+
+		$mulai = $this->input->get('mulai');
+		$selesai = $this->input->get('selesai');
+		$id_cabang = $this->input->get('id_cabang');
+		$data['all'] = $this->m_barang->tbl_pembelian_barang($id_cabang,$mulai,$selesai);
+		$data['mulai']=$mulai;
+		$data['selesai']=$selesai;
+		$data['id_cabang']=$id_cabang;
+
+		$this->load->view('tbl_pembelian_barang_xl',$data);
 	}
 
 	public function history_tbl_pembelian_barang()
@@ -597,14 +641,36 @@ class Barang extends CI_Controller {
 		$mulai = $this->input->get('mulai');
 		$selesai = $this->input->get('selesai');
 		$id_cabang = $this->input->get('id_cabang');
-		$data['all'] = $this->m_barang->history_tbl_pembelian_barang($id_cabang);
+		$data['all'] = $this->m_barang->history_tbl_pembelian_barang($id_cabang,$mulai,$selesai);
 		$data['mulai']=$mulai;
 		$data['selesai']=$selesai;
 		$data['id_cabang']=$id_cabang;
 
-		$this->load->view('tbl_pembelian_barang',$data);
+		$this->load->view('tbl_pembelian_barang_history',$data);
 
 	}
+
+
+	public function hutang_ke_penjual()
+	{
+		
+		$data['all'] = $this->m_penjual->hutang_all();
+		
+		$this->load->view('hutang_ke_penjual',$data);
+	}
+
+	public function detail_hutang($id_penjual)
+	{
+		$data['all'] = $this->m_penjual->hutang_by_penjual($id_penjual);
+		
+		$this->load->view('detail_hutang',$data);
+	}
+	/******* pembelian ******/
+
+
+
+
+
 
 	public function form_penjualan()
 	{

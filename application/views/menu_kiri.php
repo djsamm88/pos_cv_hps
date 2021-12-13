@@ -247,6 +247,35 @@
         </li>
 
 
+
+        <li class="treeview">
+          
+          <a href="#"><i class="fa fa-users"></i> <span>Penjual</span>
+            <span class="pull-right-container">
+                <i class="fa fa-angle-left pull-right"></i>
+              </span>
+          </a>
+
+          <ul class="treeview-menu">
+             <li>
+              <a href="#" onclick="eksekusi_controller('<?php echo base_url()?>index.php/penjual/data','Master Penjual');return false;">
+                <i class="fa fa-link"></i> <span>Data</span>
+              </a>
+            </li>
+
+            <li>
+              <a href="#" onclick="eksekusi_controller('<?php echo base_url()?>index.php/penjual/transaksi','Utang/Piutang');return false;">
+                <i class="fa fa-link"></i> <span>Transaksi</span>
+              </a>
+            </li>
+
+
+            
+            
+          </ul>
+        </li>
+
+
         <!--
         <li class="treeview">
           
@@ -367,10 +396,6 @@
 
 
 
-
-
-
-
         <li>
           <a href="#" onclick="eksekusi_controller('<?php echo base_url()?>index.php/barang/form_penjualan',' Kasir');return false;">
             <i class="fa fa-shopping-cart"></i> <span>Kasir</span>
@@ -380,6 +405,20 @@
 
         
 
+
+
+        <li class="treeview">
+          
+          <a href="#"><i class="fa fa-dollar"></i> <span>Suplier</span>
+            <span class="pull-right-container">
+                <i class="fa fa-angle-left pull-right"></i>
+              </span>
+          </a>
+
+          <ul class="treeview-menu">
+
+
+
         <li>
           <a href="#" onclick="eksekusi_controller('<?php echo base_url()?>index.php/barang/form_pembelian',' Order Suplier');return false;">
             <i class="fa fa-shopping-cart"></i> <span>Order Suplier</span>
@@ -388,17 +427,29 @@
 
 
         <li>
-          <a href="#" onclick="eksekusi_controller('<?php echo base_url()?>index.php/barang/tbl_pembelian_barang',' Order Suplier');return false;">
+          <a href="#" onclick="eksekusi_controller('<?php echo base_url()?>index.php/barang/tbl_pembelian_barang?mulai=<?php echo date('Y-m-').'01'?>&selesai=<?php echo date('Y-m-d',strtotime('+1 days'));?>','History Order');return false;">
             <i class="fa fa-shopping-cart"></i> <span>Status Order</span>
           </a>
         </li>
 
         <li>
-          <a href="#" onclick="eksekusi_controller('<?php echo base_url()?>index.php/barang/history_tbl_pembelian_barang',' Order Suplier');return false;">
+          <a href="#" onclick="eksekusi_controller('<?php echo base_url()?>index.php/barang/history_tbl_pembelian_barang?mulai=<?php echo date('Y-m-').'01'?>&selesai=<?php echo date('Y-m-d',strtotime('+1 days'));?>','History Order');return false;">
             <i class="fa fa-shopping-cart"></i> <span>History Order</span>
           </a>
         </li>
 
+        <li>
+          <a href="#" onclick="eksekusi_controller('<?php echo base_url()?>index.php/barang/hutang_ke_penjual','Hutang Order');return false;">
+            <i class="fa fa-shopping-cart"></i> <span>Hutang Order</span>
+          </a>
+        </li>
+
+
+
+          </ul>
+        </li>
+
+        
 
         
         
@@ -415,7 +466,7 @@
           <ul class="treeview-menu">
             
         <li>
-          <a href="#" onclick="eksekusi_controller('<?php echo base_url()?>index.php/barang/tbl_pembelian_barang',' Order Suplier');return false;">
+          <a href="#" onclick="eksekusi_controller('<?php echo base_url()?>index.php/barang/tbl_pembelian_barang?mulai=<?php echo date('Y-m-').'01'?>&selesai=<?php echo date('Y-m-d',strtotime('+1 days'));?>','History Order');return false;">
             <i class="fa fa-shopping-cart"></i> <span>Status Order</span>
           </a>
         </li>

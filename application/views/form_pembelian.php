@@ -22,7 +22,7 @@ $total_berat=0;
 <!-- Default box -->
       <div class="box">
         <div class="box-header with-border">
-          <h3 class="box-title" id="judul2">Form Order Suplier</h3>
+          <h3 class="box-title" id="judul2">Form Order Penjual</h3>
 
           <div class="box-tools pull-right">
             <button type="button" class="btn btn-box-tool" data-widget="collapse" data-toggle="tooltip"
@@ -38,19 +38,26 @@ $total_berat=0;
 <form id="penjualan_barang">
   <div class="row">
   
-  <div class="col-sm-3">
-    <input type="text" name="nama_suplier" id="nama_suplier" value="" class="form-control" required placeholder="Nama Suplier">
+  <div class="col-sm-2">
+    <input type="text" name="id_penjual" id="id_penjual" value="" class="form-control" required placeholder="id Penjual" readonly>
     
-    <small><i>Nama Suplier</i></small>
+    <small><i>id Penjual</i></small>
   </div>
   <div class="col-sm-3">
-    <input type="text" name="hp_suplier" id="hp_suplier" value="" class="form-control" required placeholder="HP Suplier">
-    <small><i>HP Suplier</i></small>
+    <input type="text" name="nama_penjual" id="nama_penjual" value="" class="form-control" required placeholder="Nama Penjual">
+    <small><i>Nama Penjual</i></small>
   </div>
+
   <div class="col-sm-3">
-    <textarea name="alamat_suplier" value="" class="form-control" placeholder="alamat_suplier" id=""></textarea>
-    <small><i>Alamat Suplier</i></small>
+    <input type="text" name="hp_penjual" id="hp_penjual" value="" class="form-control" readonly placeholder="HP Penjual">
+    <small><i>HP Penjual</i></small>
   </div>
+  
+  <div class="col-sm-4">
+    <input type="text" name="alamat" id="alamat" value="" class="form-control" readonly placeholder="alamat Penjual">
+    <small><i>alamat Penjual</i></small>
+  </div>
+  
   
 
 </div>
@@ -66,11 +73,13 @@ $total_berat=0;
               <th width="10px">Id</th>           
               <th width="10px">Stok</th>                                   
               <th>Barang</th>              
+                           
                      
               <th>Satuan</th>                                   
               
               <th>Qty</th>
-              
+              <th>Harga</th> 
+              <th>Sub Total</th>
               <th>-</th>                                          
                               
               
@@ -79,6 +88,46 @@ $total_berat=0;
       </thead>
       <tbody id="t4_order">
       </tbody>
+
+
+        <tr>
+          <td colspan="6" align="right"><b>Total</b></td>
+          <td  align="right" >
+            <input id="t4_total" type="text" name="total" readonly class="form-control nomor" value="0" style="text-align:right;">
+          </td>
+          <td></td>
+        </tr>
+
+        <tr>
+          <td colspan="6" align="right"><b>Jenis Pembayaran</b></td>
+          <td  align="right" >
+            <select id="jenis_pembayaran" type="text" name="jenis_pembayaran"  class="form-control nomor" value="0" required>
+              <option value=""> -- pilih --</option>
+              <option value="hutang">hutang</option>
+              <option value="lunas">lunas</option>
+            </select>
+          </td>
+          <td></td>
+        </tr>
+
+          <tr>
+          <td colspan="6" align="right"><b>Bayar</b></td>
+          <td  align="right" >
+            <input id="bayar" type="text" name="bayar"  class="form-control nomor" value="0" style="text-align:right;">
+          </td>
+          <td></td>
+        </tr>
+
+
+          <tr>
+          <td colspan="6" align="right"><b>Hutang</b></td>
+          <td  align="right" >
+            <input id="hutang" type="text" name="hutang" readonly class="form-control nomor" value="0" style="text-align:right;">
+          </td>
+          <td></td>
+        </tr>
+
+
       <tfoot>
         
 
@@ -124,7 +173,65 @@ $('.datepicker').datepicker({
 notif(); 
 
 
+$("#jenis_pembayaran").on("change",function(){
+    var jenis = $(this).val();
+    if(jenis=="hutang")
+    {
+      $("#bayar").val("0");
+    }else{
+      $("#bayar").val($("#t4_total").val());
+    }
+    cekHutang();
+})
 
+$("body").on("keydown keyup mousedown mouseup select contextmenu drop",function(){
+  cekHutang();
+})
+
+function cekHutang()
+{
+  var total = buang_titik($("#t4_total").val());
+  var bayar = buang_titik($("#bayar").val());
+
+  $("#hutang").val(formatRupiah(total-bayar));
+}
+
+$(function(){
+
+    var semuaPenjual = function(request,response){
+            console.log(request.term);
+            var serialize = {cari:request.term};
+            $.get("<?php echo base_url()?>index.php/penjual/json_penjual",serialize,
+              function(data){
+                /*
+                response(data);
+                console.log(data);
+                */
+                response($.map(data, function(obj) {
+                    return {
+                        label: obj.nama_penjual,
+                        value: obj.id_penjual,
+                        hp_penjual: obj.hp_penjual,
+                        alamat: obj.alamat
+                    };
+                }));
+                
+            })
+          }
+  $("#nama_penjual").autocomplete({
+      source:semuaPenjual,
+      minLength:1,
+      select:function(ev,ui){
+        console.log(ui.item.alamat);
+        $("#id_penjual").val(ui.item.value);
+        $("#hp_penjual").val(ui.item.hp_penjual);
+        $("#nama_penjual").val(ui.item.nama_penjual);
+        $("#alamat").val(ui.item.alamat);
+        $(this).val(ui.item.label);
+        return false;
+      }
+  })
+})
 
 
 
@@ -142,7 +249,7 @@ $( function() {
                 */
                 response($.map(data, function(obj) {
                     return {
-                        label: obj.nama_barang,
+                         label: obj.nama_barang +" - "+obj.id,
                         value: obj.id,
                         stok: obj.qty,
                         harga_retail: obj.harga_retail, 
@@ -152,6 +259,9 @@ $( function() {
                         jum_per_lusin: obj.jum_per_lusin, 
                         reminder: obj.reminder, 
                         berat:obj.berat,
+                        nama_barang:obj.nama_barang +" - "+obj.id,
+                        id:obj.id,
+                        qty:obj.qty,
                         harga_pokok:obj.harga_pokok
                     };
                 }));
@@ -168,14 +278,7 @@ $( function() {
         console.log(ui);        
         $(this).val('');
 
-
-       if(ui.item.stok<ui.item.reminder)
-       {
-        //notif();//notif ini dari footer welcome
-       }
-
-      
-
+        total();
       
 
         console.log(ui.item);
@@ -186,16 +289,22 @@ $( function() {
                 "<td><input id='id_barang' name='id_barang[]' type='hidden' value='"+ui.item.value+"'>"+ui.item.value+"</td>"+
                 "<td id='stoknya'>"+ui.item.stok+"</td>"+
                 "<td id='nama_barang'>"+ui.item.label+"</td>"+                
-                "<td><select class='form-control' name='satuan[]'><option value='koli'>Koli</option>"+
-                      "<option value='lusin'>Lusin</option>"+
-                      "<option value='retail'>Retail</option></select></td>"+
+                
+                "<td><select class='form-control' name='satuan[]'><option value='retail'>Retail</option>"+
                 
                 "<td>"+
                 "<input class='form-control' type='number' id='jumlah_beli' name='jumlah[]'  placeholder='qty' required value='1' >"+
                 "</td>"+
+
+                "<td>"+
+                "<input class='form-control' type='text' id='harga_pokok' name='harga_pokok[]'  required readonly value='"+formatRupiah(ui.item.harga_pokok)+"' >"+
+                "</td>"+
+
+                 "<td>"+
+                "<input class='form-control' type='text' id='sub_total' name='sub_total[]'  required readonly value='"+formatRupiah(ui.item.harga_pokok)+"' >"+
+                "</td>"+
+
                 
-                          
-                          
                   "<td><button class='btn btn-danger btn-xs' id='remove_order' type='button'>Hapus</button></td></tr>"
                           ;
                   $("#t4_order").append(template);
@@ -212,7 +321,54 @@ $( function() {
 
 });
 
+$("body").on("keydown keyup mousedown mouseup select contextmenu drop",function(){
+  total();
+})
 
+
+$("#tbl_datanya").on("keydown keyup mousedown mouseup select contextmenu drop","tbody tr td input#jumlah_beli",function(){ 
+
+  console.log($(this).parent().parent().find("#stoknya").html());
+  
+  var dibeli        = parseInt($(this).val());
+  
+  sub_total($(this));  
+  total();
+
+
+})
+
+
+function sub_total(ini)
+{
+    var qty = ini.val();
+    if(qty=="")
+    {
+      qty=0;
+    }
+    var harga = buang_titik(ini.parent().parent().find("#harga_pokok").val());
+
+    var sub_total = parseInt(qty)*parseInt(harga);
+
+    ini.parent().parent().find("#sub_total").val(formatRupiah(sub_total));  
+    
+    total();
+}
+
+
+
+
+function total()
+{
+  var total=0;
+  $("tbody#t4_order tr td input#sub_total").each(function(){
+     total+= parseInt(buang_titik($(this).val())) || 0;
+
+  })
+
+  $("#t4_total").val(formatRupiah(total));
+
+}
 
 
 $("#tbl_datanya").on("click","tbody tr td button#remove_order",function(x){
@@ -240,15 +396,17 @@ $("#penjualan_barang").on("submit",function(){
 
     $.post("<?php echo base_url()?>index.php/barang/go_beli_suplier",$(this).serialize(),function(x){
       console.log(x);
-      
+        
         //window.open("<?php echo base_url()?>index.php/barang/struk_penjualan/"+x);
-        var mulai="";
-        var selesai="";
+        var mulai="<?php echo date('Y-m-').'01'?>";
+        var selesai="<?php echo date('Y-m-d',strtotime('+1 days'));?>";
+        
         eksekusi_controller('<?php echo base_url()?>index.php/barang/tbl_pembelian_barang/?mulai='+mulai+'&selesai='+selesai+'&id_cabang=<?php echo $this->session->userdata('id_cabang')?>','Status Order');
 
         //console.log("<?php echo base_url()?>index.php/barang/struk_penjualan/"+x);
-
-        notif();   
+        
+        //notif();   
+        
     })
   
   }

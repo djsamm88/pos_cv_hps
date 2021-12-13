@@ -239,7 +239,7 @@ $("#go_trx_jurnal").on("submit",function(){
       return false;
     }
 
-    eksekusi_controller('<?php echo base_url()?>index.php/barang/tbl_pembelian_barang/?mulai='+mulai+'&selesai='+selesai+'&id_cabang='+id_cabang,'Status Order');
+    eksekusi_controller('<?php echo base_url()?>index.php/barang/history_tbl_pembelian_barang/?mulai='+mulai+'&selesai='+selesai+'&id_cabang='+id_cabang,'Status Order');
   return false;
 })
 
@@ -278,10 +278,7 @@ function selesai_pembelian(group_trx)
   {
     $.post("<?php echo base_url()?>index.php/barang/selesai_status_order/"+group_trx,function(x){
       console.log(x);
-      alert("Berhasil.");
-      var mulai="<?php echo date('Y-m-').'01'?>";
-        var selesai="<?php echo date('Y-m-d',strtotime('+1 days'));?>";
-  eksekusi_controller('<?php echo base_url()?>index.php/barang/tbl_pembelian_barang?mulai='+mulai+'&selesai='+selesai+'&id_cabang='+id_cabang,'Status Order');
+      alert("Berhasil.")
     })  
   }
   
@@ -304,9 +301,7 @@ $(document).ready(function(){
 $("#judul2").html("DataTable "+document.title);
 
 $("#myModal").on("hidden.bs.modal", function () {
-        var mulai="<?php echo date('Y-m-').'01'?>";
-        var selesai="<?php echo date('Y-m-d',strtotime('+1 days'));?>";
-  eksekusi_controller('<?php echo base_url()?>index.php/barang/tbl_pembelian_barang?mulai='+mulai+'&selesai='+selesai+'&id_cabang='+id_cabang,'Status Order');
+  eksekusi_controller('<?php echo base_url()?>index.php/barang/tbl_pembelian_barang_history',document.title);
 });
 
 

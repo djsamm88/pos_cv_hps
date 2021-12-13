@@ -34,11 +34,11 @@
         <tr>
               
               <th>No</th>
-               <th width="100px">id_pelanggan</th>
-                <th>nama_pembeli</th>
-                <th>email_pembeli</th>
-                <th>password</th>
-                <th>hp_pembeli</th>
+               <th width="100px">id_penjual</th>
+                <th>nama_penjual</th>
+                <th>email_penjual</th>
+                <th>alamat</th>
+                <th>hp_penjual</th>
                 <th>tgl_daftar</th>
                 <th>tgl_trx_terakhir</th>
                 <th>saldo</th>
@@ -52,8 +52,8 @@
         $no = 0;
         foreach($all as $x)
         {
-          $btn = "<button class='btn btn-warning btn-xs btn-block' onclick='edit_admin($x->id_pelanggan);return false;'>Edit</button>
-                  <button class='btn btn-danger btn-xs btn-block' onclick='hapus_admin($x->id_pelanggan);return false;'>Hapus</button>    ";
+          $btn = "<button class='btn btn-warning btn-xs btn-block' onclick='edit_admin($x->id_penjual);return false;'>Edit</button>
+                  <button class='btn btn-danger btn-xs btn-block' onclick='hapus_admin($x->id_penjual);return false;'>Hapus</button>    ";
 
           
           $no++;
@@ -64,11 +64,11 @@
               
               <tr>
                 <td>$no</td>
-                <td>$x->id_pelanggan</td>
-                <td>$x->nama_pembeli</td>
-                <td>$x->email_pembeli</td>
-                <td>$x->password</td>
-                <td>$x->hp_pembeli</td>
+                <td>$x->id_penjual</td>
+                <td>$x->nama_penjual</td>
+                <td>$x->email_penjual</td>
+                <td>$x->alamat</td>
+                <td>$x->hp_penjual</td>
                 <td>$x->tgl_daftar</td>
                 <td>$x->tgl_trx_terakhir</td>
                 <td>".rupiah($x->saldo)."</td>
@@ -112,36 +112,36 @@
         <h4 class="modal-title">Tambah Admin</h4>
       </div>
       <div class="modal-body">
-          <form id="form_pelanggan">
-            <input type="hidden" name="id_pelanggan" id="id_pelanggan" class="form-control" readonly="readonly">
+          <form id="form_penjual">
+            <input type="hidden" name="id_penjual" id="id_penjual" class="form-control" readonly="readonly">
             
-            <div class="col-sm-4 judul">nama_pembeli</div>
+            <div class="col-sm-4 judul">nama_penjual</div>
             <div class="col-sm-8">
-              <input class="form-control" name="nama_pembeli" id="nama_pembeli" required>
+              <input class="form-control" name="nama_penjual" id="nama_penjual" required>
             </div>
             <div style="clear:both"></div>
             <br>
 
 
-            <div class="col-sm-4 judul">hp_pembeli</div>
+            <div class="col-sm-4 judul">hp_penjual</div>
             <div class="col-sm-8">
-              <input class="form-control" name="hp_pembeli" id="hp_pembeli" required>
+              <input class="form-control" name="hp_penjual" id="hp_penjual" required>
             </div>
             <div style="clear:both"></div>
             <br>
 
 
-            <div class="col-sm-4 judul">email_pembeli</div>
+            <div class="col-sm-4 judul">email_penjual</div>
             <div class="col-sm-8">
-              <input class="form-control" name="email_pembeli" id="email_pembeli" type="email" required>
+              <input class="form-control" name="email_penjual" id="email_penjual" type="text" required>
             </div>
             <div style="clear:both"></div>
             <br>
 
 
-            <div class="col-sm-4 judul">password</div>
+            <div class="col-sm-4 judul">alamat</div>
             <div class="col-sm-8">
-              <input class="form-control" name="password" id="password" type="text" required>
+              <input class="form-control" name="alamat" id="alamat" type="text" required>
             </div>
             <div style="clear:both"></div>
             <br>
@@ -190,42 +190,42 @@ $(document).ready(function(){
 
 });
 
-function edit_admin(id_pelanggan)
+function edit_admin(id_penjual)
 {
-  $.get("<?php echo base_url()?>index.php/pelanggan/by_id/"+id_pelanggan,function(e){
+  $.get("<?php echo base_url()?>index.php/penjual/by_id/"+id_penjual,function(e){
     //console.log(e[0].id_desa);
-    $("#id_pelanggan").val(e[0].id_pelanggan);
-    $("#nama_pembeli").val(e[0].nama_pembeli);
-    $("#email_pembeli").val(e[0].email_pembeli);
+    $("#id_penjual").val(e[0].id_penjual);
+    $("#nama_penjual").val(e[0].nama_penjual);
+    $("#email_penjual").val(e[0].email_penjual);
     $("#password").val(e[0].password);
-    $("#hp_pembeli").val(e[0].hp_pembeli);
+    $("#hp_penjual").val(e[0].hp_penjual);
 
     
   })
   $("#myModal").modal('show');
 }
 
-function jadikan_member(id_pelanggan)
+function jadikan_member(id_penjual)
 {
   if(confirm("Anda yakin menjadikan member?"))
   {
-    $.get("<?php echo base_url()?>index.php/pelanggan/by_id/"+id_pelanggan,function(e){
-      if(e[0].email_pembeli=="" || e[0].password=="")
+    $.get("<?php echo base_url()?>index.php/penjual/by_id/"+id_penjual,function(e){
+      if(e[0].email_penjual=="" || e[0].password=="")
       {
         alert("Untuk member, lengkapi dulu email dan password");
-        $("#id_pelanggan").val(e[0].id_pelanggan);
-        $("#nama_pembeli").val(e[0].nama_pembeli);
-        $("#email_pembeli").val(e[0].email_pembeli);
+        $("#id_penjual").val(e[0].id_penjual);
+        $("#nama_penjual").val(e[0].nama_penjual);
+        $("#email_penjual").val(e[0].email_penjual);
         $("#password").val(e[0].password);
-        $("#hp_pembeli").val(e[0].hp_pembeli);
+        $("#hp_penjual").val(e[0].hp_penjual);
         $("#myModal").modal('show');
         return false;
       }
 
-      $.get("<?php echo base_url()?>index.php/pelanggan/jadikan_member/"+id_pelanggan,function(x){
+      $.get("<?php echo base_url()?>index.php/penjual/jadikan_member/"+id_penjual,function(x){
 
         alert("Berhasil");
-        eksekusi_controller('<?php echo base_url()?>index.php/pelanggan/data','Data pelanggan');
+        eksekusi_controller('<?php echo base_url()?>index.php/penjual/data','Data penjual');
       })
     })
   }
@@ -233,32 +233,32 @@ function jadikan_member(id_pelanggan)
 
 function tambah_admin()
 {
-  $("#id_pelanggan").val("");
-  $("#nama_pembeli").val("");
-  $("#email_pembeli").val("");
-  $("#hp_pembeli").val("");
+  $("#id_penjual").val("");
+  $("#nama_penjual").val("");
+  $("#email_penjual").val("");
+  $("#hp_penjual").val("");
   
   
   $("#myModal").modal('show');
 }
 
-function hapus_admin(id_pelanggan)
+function hapus_admin(id_penjual)
 {
   if(confirm("Anda yakin menghapus?"))
   {
-    $.get("<?php echo base_url()?>index.php/pelanggan/hapus/"+id_pelanggan,function(e){
-      eksekusi_controller('<?php echo base_url()?>index.php/pelanggan/data');
+    $.get("<?php echo base_url()?>index.php/penjual/hapus/"+id_penjual,function(e){
+      eksekusi_controller('<?php echo base_url()?>index.php/penjual/data');
     })  
   }
   
 }
 
-$("#form_pelanggan").on("submit",function(){
+$("#form_penjual").on("submit",function(){
   $("#t4_info_form").html('Loading...');
 
   var ser = $(this).serialize();
 
-  $.post("<?php echo base_url()?>index.php/pelanggan/simpan",ser,function(x){
+  $.post("<?php echo base_url()?>index.php/penjual/simpan",ser,function(x){
     console.log(x);
       if(x=="2")
       {
@@ -278,6 +278,6 @@ $("#form_pelanggan").on("submit",function(){
 
 
 $("#myModal").on("hidden.bs.modal", function () {
-  eksekusi_controller('<?php echo base_url()?>index.php/pelanggan/data','Data Pelanggan');
+  eksekusi_controller('<?php echo base_url()?>index.php/penjual/data','Data penjual');
 });
 </script>

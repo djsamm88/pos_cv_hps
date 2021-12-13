@@ -20,6 +20,8 @@ td {
       padding:5px;
       
     }
+
+
 </style>
 
     
@@ -31,11 +33,11 @@ td {
 
 <table class="table table-bordered">
 	<tr>
-		<td width="30%">Nama Suplier</td><td><?php echo $trx[0]->nama_suplier?></td>
+		<td width="30%">Nama Penjual</td><td><?php echo $trx[0]->nama_penjual?></td>
 	</tr><tr>
-		<td>No.HP</td><td><?php echo $trx[0]->hp_suplier?></td>
+		<td>No.HP</td><td><?php echo $trx[0]->hp_penjual?></td>
 	</tr><tr>
-		<td>Alamat</td><td><?php echo $trx[0]->alamat_suplier?></td>
+		<td>Alamat</td><td><?php echo $trx[0]->alamat?></td>
 	</tr><tr>
     <td>Tgl Trx</td><td><?php echo $trx[0]->tgl?></td>
   </tr><tr>  
@@ -60,6 +62,8 @@ td {
               <th>Barang</th>                                   
               <th>Qty</th>   
               <th>Satuan</th>   
+              <th>Harga</th>   
+              <th>sub_total</th>   
               
         </tr>
       </thead>
@@ -77,6 +81,9 @@ td {
                 <td>$h->nama_barang</td>                                
                 <td>$h->jumlah</td>                
                 <td>$h->satuan</td>                
+                <td align=right>".rupiah($h->harga)."</td>                
+                <td align=right>".rupiah($h->sub_total)."</td>                
+                         
                 
               </tr>
           ");
@@ -86,6 +93,36 @@ td {
         
         ?>
       </tbody>
+
+      <tfoot>
+        
+          <tr>
+          <td colspan="5" align="right"><b>Total</b></td>
+          <td  align="right" >
+            <?php echo rupiah($trx[0]->total)?>
+          </td>
+          <td></td>
+        </tr>
+
+
+          <tr>
+          <td colspan="5" align="right"><b>Bayar</b></td>
+          <td  align="right" >
+            <?php echo rupiah($trx[0]->bayar)?>
+          </td>
+          <td></td>
+        </tr>
+
+
+          <tr>
+          <td colspan="5" align="right"><b>Hutang</b></td>
+          <td  align="right" >
+            <b><?php echo rupiah($trx[0]->hutang)?></b>
+          </td>
+          <td></td>
+        </tr>
+
+      </tfoot>
   </table>
 
 

@@ -235,6 +235,7 @@ function go_beli(ini)
 
 
 
+
 $("#myModal").on("hidden.bs.modal", function () {
   eksekusi_controller('<?php echo base_url()?>index.php/barang/form_barang_sementara','Barang Masuk');
 });
