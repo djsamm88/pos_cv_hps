@@ -234,12 +234,22 @@
                 <i class="fa fa-link"></i> <span>Data</span>
               </a>
             </li>
-
+            
+            
+              <li>
+              <a href="#" onclick="eksekusi_controller('<?php echo base_url()?>index.php/barang/lap_penjualan/?mulai=<?php echo date( 'Y-m-')?>1&selesai=<?php echo date('Y-m-d',strtotime('+1 days'));?>&id_cabang=<?php echo $this->session->userdata('id_cabang')?>','Transaksi Barang');return false;">
+                <i class="fa fa-link"></i> <span>Lap.Transaksi</span>
+              </a>
+            </li>
+            
+            
+            <!--
             <li>
               <a href="#" onclick="eksekusi_controller('<?php echo base_url()?>index.php/Pelanggan/transaksi','Utang/Piutang');return false;">
                 <i class="fa fa-link"></i> <span>Transaksi</span>
-              </a>
+              </a>              
             </li>
+          -->
 
 
             

@@ -26,6 +26,45 @@ class Pelanggan extends CI_Controller {
 	}
 
 
+	public function detail_hutang_pelanggan($id_pelanggan)
+	{
+		$data['all'] = $this->m_pelanggan->hutang_by_pelanggan($id_pelanggan);
+		$data['all_terbayar'] = $this->m_pelanggan->hutang_terbayar_by_pelanggan($id_pelanggan);
+		$data['id_pelanggan']=$id_pelanggan;
+		$this->load->view('detail_hutang_pelanggan',$data);
+	}
+
+	public function detail_hutang_pelanggan_xl($id_pelanggan)
+	{
+		$file="detail_hutang.xls";
+		header("Content-type: application/octet-stream");
+		header("Content-Disposition: attachment; filename=$file");
+		header("Pragma: no-cache");
+		header("Expires: 0");	
+		$data['all'] = $this->m_pelanggan->hutang_by_pelanggan($id_pelanggan);
+		$data['all_terbayar'] = $this->m_pelanggan->hutang_terbayar_by_pelanggan($id_pelanggan);
+		$data['id_pelanggan']=$id_pelanggan;
+		$this->load->view('detail_hutang_pelanggan',$data);
+	}
+
+	public function go_bayar_hutang()
+	{
+
+		$serialize = $this->input->post();
+
+		$data['id_referensi'] = $serialize['id_pelanggan'];
+		$data['jumlah'] = hanya_nomor($serialize['jumlah']);
+		$data['url_bukti'] = upload_file('url_bukti');
+		$data['keterangan'] = $serialize['keterangan'] . "Dari: ". $serialize['nama_pembeli'];
+		$data['id_group'] = 18;// pembayaran ke suplier
+		$data['id_cabang'] = $this->session->userdata('id_cabang');
+
+		$this->db->set($data);
+		$this->db->insert('tbl_transaksi');
+		$id_ret = $this->db->insert_id();
+		
+	}
+
 	public function pesanan_member()
 	{
 		
@@ -154,7 +193,7 @@ class Pelanggan extends CI_Controller {
 		$data['pelanggan'] = $this->m_pelanggan->m_by_id($this->session->userdata('id_admin'))[0];
 		$data['eksepedisi'] = $this->m_ekspedisi->m_data();	
 
-		$this->load->view('form_penjualan_pelanggan',$data);
+		$this->load->view('form_pelangganan_pelanggan',$data);
 	}
 
 	public function lap_penjualan_pelanggan()

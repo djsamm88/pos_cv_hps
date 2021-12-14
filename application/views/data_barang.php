@@ -38,7 +38,7 @@
         <tr>
               
               <th>No</th>
-              <th width="10px">Id Barang</th>           
+              <th width="10px"> id_barcode</th>           
               <th>Barang</th>                     
               <th>Stok</th>                     
               <th>Harga Beli</th>                     
@@ -78,7 +78,7 @@
               
               <tr>
                 <td>$no</td>
-                <td>$x->id</td>
+                <td>$x->id_barcode</td>
                 <td>$x->nama_barang</td>                
                 <td>$x->qty</td>                
                 <td>".rupiah($x->harga_pokok)."</td>                
@@ -135,7 +135,13 @@
           <form id="form_tambah_admin">
             <input type="hidden" name="id" id="id" class="form-control" readonly="readonly">            
 
-            <div class="col-sm-4">Nama Barang</div>
+
+            <div class="col-sm-4">ID Barang</div>
+            <div class="col-sm-8"><input type="text" name="id_barcode" id="id_barcode" required="required" class="form-control" placeholder="id_barcode"></div>
+            <div style="clear: both;"></div><br>
+        
+
+          <div class="col-sm-4">Nama Barang</div>
             <div class="col-sm-8"><input type="text" name="nama_barang" id="nama_barang" required="required" class="form-control" placeholder="nama_barang"></div>
             <div style="clear: both;"></div><br>
         
@@ -217,6 +223,8 @@ function edit(id)
   $.get("<?php echo base_url()?>index.php/"+classnya+"/by_id/"+id,function(e){
     //console.log(e[0].id);
     $("#id").val(e[0].id);
+    $("#id_barcode").val(e[0].id_barcode);
+    
     $("#nama_barang").val(e[0].nama_barang);
     $("#harga_retail").val(e[0].harga_retail);
     $("#harga_lusin").val(e[0].harga_lusin);

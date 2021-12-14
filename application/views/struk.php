@@ -119,8 +119,8 @@ font-size:10px;
 		</tr>
 		
 		<tr>
-			<td colspan=5 align=right>Kembali</td>
-			<td align=right><b>" . rupiah($data[0]->bayar - $total) . "</b></td>
+			<td colspan=5 align=right>Hutang</td>
+			<td align=right><b>" . rupiah($total - $data[0]->bayar ) . "</b></td>
 		</tr>
 	";
 ?>

@@ -202,7 +202,7 @@ class Barang extends CI_Controller {
 	{
 		$id_cabang = $this->session->userdata('id_cabang');
 		$data = $this->input->post();
-		$data['alamat'] = $data['alamat_lengkap']." - ".$data['alamat'];
+		$data['alamat'] = $data['alamat']." - ".$data['alamat'];
 
 		
 		unset($data['alamat_lengkap']);
@@ -307,9 +307,14 @@ class Barang extends CI_Controller {
 		$serialize['transport_ke_ekspedisi'] = hanya_nomor($data['transport_ke_ekspedisi']);
 		$serialize['harga_ekspedisi'] 		 = hanya_nomor($data['harga_ekspedisi']);
 
-		/*********** insert ke transaksi **************/	
+		/*********** insert ke transaksi **************/
+
+		$hutang = $total_tanpa_diskon - hanya_nomor($data['bayar']);
+
 		$ket = "Kpd: [".$data['nama_pembeli']."] - Kode TRX:[".$data['grup_penjualan']."] 
 				Jumlah:[".rupiah($total_tanpa_diskon)."] 
+				Bayar:[".($data['bayar'])."] 
+				Hutang:[".rupiah($hutang)."] 
 				diskon:[".$data['diskon']."] 
 				harga_ekspedisi:[".$serialize['harga_ekspedisi']."] 
 				transport_ke_ekspedisi:[".$data['transport_ke_ekspedisi']."] 
@@ -318,13 +323,14 @@ class Barang extends CI_Controller {
 		$ser_trx = array(
 						"id_group"		=> "8",							
 						"keterangan"	=> $ket,
-						"jumlah"		=> ($total_tanpa_diskon),
+						"jumlah"		=> hanya_nomor($data['bayar']),
 						"harga_beli"	=> ($total_harga_beli),
 						"diskon"		=> $serialize['diskon'],
 						"harga_ekspedisi"			=> $serialize['harga_ekspedisi'],
 						"transport_ke_ekspedisi"	=> $serialize['transport_ke_ekspedisi'],
 						"id_referensi"	=> $data['grup_penjualan'],
 						"id_pelanggan"	=> $id_pelanggan,
+						"hutang"	=> $hutang,
 						"id_cabang"		=> $id_cabang
 					);				
 		/* untuk id_referensi = id_group/id_table*/				
@@ -536,6 +542,34 @@ class Barang extends CI_Controller {
 		}
 		echo $save['group_trx'];
 
+		//disini simpan ke tbl_trx jika utang
+		$hutang = $save['total']-$save['bayar'];
+		
+
+			/*********** insert ke transaksi **************/	
+		$ket = "Kpd: [".$data['nama_penjual']."] - Kode TRX:[".$save['group_trx']."] 
+				Total:[".rupiah($save['total'])."] 
+				Bayar:[".rupiah($save['bayar'])."] 
+				Hutang:[".rupiah($hutang)."] 				
+				".$data['keterangan'];
+
+		$ser_trx = array(
+						"id_group"		=> "17",							
+						"keterangan"	=> $ket,
+						"jumlah"		=> ($save['bayar']),
+						
+						"id_referensi"	=> $data['id_penjual'],
+						
+						"id_cabang"		=> $save['id_admin'],
+						"group_trx"		=> $save['group_trx']
+
+					);				
+		/* untuk id_referensi = id_group/id_table*/				
+		$this->db->set($ser_trx);
+		$this->db->insert('tbl_transaksi');
+		/*********** insert ke transaksi **************/
+		
+
 	}
 
 	public function update_status_order()
@@ -658,7 +692,7 @@ class Barang extends CI_Controller {
 		
 		$this->load->view('hutang_ke_penjual',$data);
 	}
-
+ 
 	public function detail_hutang($id_penjual)
 	{
 		$data['all'] = $this->m_penjual->hutang_by_penjual($id_penjual);
@@ -1597,8 +1631,9 @@ class Barang extends CI_Controller {
 		$qq = $this->db->query("SELECT id_transaksi FROM `tbl_barang_transaksi` ORDER BY id_transaksi DESC LIMIT 1");
 		$qqq = $qq->result();
 		$ser_trx['id_referensi'] = $qqq[0]->id_transaksi;	
-		$this->db->set($ser_trx);
-		$this->db->insert('tbl_transaksi');
+		
+		//$this->db->set($ser_trx);
+		//$this->db->insert('tbl_transaksi');
 		/*********** insert ke transaksi **************/
 
 		/*hapus dari tbl_sementara*/

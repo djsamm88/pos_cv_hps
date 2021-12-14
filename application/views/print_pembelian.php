@@ -26,7 +26,7 @@ td {
 
     
     <div class="text-center" style="font-weight:bold;font-size: 14">      
-        SLIP ORDER BARANG                        
+        SLIP ORDER BARANG (PRE ORDER)                       
     </div>
     <br>
 

@@ -79,6 +79,8 @@
               <th>Transport Ke Ekspedisi</th>                     
               <th>Saldo</th>                     
               <th>Total</th>                     
+              <th>Bayar</th>                     
+              <th>Hutang</th>                     
               <th>Struk</th>                     
               
               
@@ -108,6 +110,9 @@
                 <td align=right>".rupiah($x->transport_ke_ekspedisi)."</td>                
                 <td align=right>".rupiah($x->saldo)."</td>                
                 <td align=right>".rupiah($total)."</td>                
+                <td align=right>".rupiah($x->bayar)."</td>                
+                <td align=right>".rupiah($total-$x->bayar)."</td>                
+
                 <td><a href='".base_url()."index.php/barang/struk_penjualan/".$x->grup_penjualan."' target='blank'>Print</a></td>                                
               </tr>
           ");

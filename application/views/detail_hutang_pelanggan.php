@@ -4,8 +4,8 @@ Detail Hutang:
         <tr>
               
               <th>No</th>                    
-              <th>Nama Penjual</th>                     
-              <th>HP Penjual</th>                     
+              <th>Nama Pelanggan</th>                     
+              <th>HP Pelanggan</th>                     
               <th>group_trx </th>                     
               <th>tgl </th>                     
               <th>total </th>                     
@@ -25,7 +25,7 @@ Detail Hutang:
         foreach($all as $x)
         {
           
-          $total_hutang +=$x->total;
+          $total_hutang +=$x->hutang;
           $no++;
             
             echo (" 
@@ -33,13 +33,13 @@ Detail Hutang:
               <tr>
                 <td>$no</td>                
                 
-                <td>$x->nama_penjual</td>                
-                <td>$x->hp_penjual</td>                
+                <td>$x->nama_pembeli</td>                
+                <td>$x->hp_pembeli</td>                
                 <td>$x->group_trx</td>                
-                <td>$x->tgl</td>                                
-                <td align=right>".rupiah($x->total)."</td>                
+                <td>$x->tgl_update</td>                                
+                <td align=right>".rupiah($x->hutang)."</td>                
                 
-                 <td><a href='".base_url()."index.php/barang/print_pembelian/?group_trx=$x->group_trx' target='blank' class='btn btn-xs btn-primary'>Bukti</a></td>                             
+                 <td><a href='".base_url()."index.php/barang/struk_penjualan/$x->group_trx' target='blank' class='btn btn-xs btn-primary'>Bukti</a></td>                             
               </tr>
           ");
           
@@ -71,8 +71,8 @@ Detail Terbayar:
         <tr>
               
               <th>No</th>                    
-              <th>Nama Penjual</th>                     
-              <th>HP Penjual</th>                     
+              <th>Nama Pelanggan</th>                     
+              <th>HP Pelanggan</th>                     
                                 
               <th>tgl </th>                     
               <th>Terbayar </th>                     
@@ -106,8 +106,8 @@ Detail Terbayar:
               <tr>
                 <td>$no</td>                
                 
-                <td>$y->nama_penjual</td>                
-                <td>$y->hp_penjual</td>                                            
+                <td>$y->nama_pembeli</td>                
+                <td>$y->hp_pembeli</td>                                            
                 <td>$y->tgl_update</td>                                
                 <td align=right>".rupiah($y->terbayar)."</td>                
                 
@@ -143,4 +143,4 @@ Detail Terbayar:
 </table>
 
 
-          <a href="<?php echo base_url()?>index.php/barang/detail_hutang_xl/<?php echo $id_penjual?>" target="blank" class="btn btn-primary" > Download </a>
+          <a href="<?php echo base_url()?>index.php/pelanggan/detail_hutang_pelanggan_xl/<?php echo $id_pelanggan?>" target="blank" class="btn btn-primary" > Download </a>

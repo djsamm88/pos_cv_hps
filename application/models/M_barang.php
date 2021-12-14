@@ -638,6 +638,7 @@ if (!defined('BASEPATH'))exit('No direct script access allowed');
 				a.harga_ekspedisi,
 				a.transport_ke_ekspedisi,
 				a.id_pelanggan,
+				a.bayar,
 				b.nama_admin,
 				b.email_admin 
 			FROM tbl_barang_transaksi a

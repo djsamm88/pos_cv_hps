@@ -39,9 +39,6 @@
               <th>Nama Penjual</th>                     
               <th>Hp Penjual</th>                                               
               <th>Hutang</th>                                               
-              <th>Terbayar</th>                                               
-              <th>Sisa Hutang</th>                                               
-              
 
               <th>Action</th>                     
               
@@ -55,7 +52,7 @@
         foreach($all as $x)
         {
           $sisa = $x->hutang-$x->terbayar;
-          $total_hutang +=$sisa;
+          $total_hutang +=$x->hutang;
 
           $btn = "<button class='btn btn-warning btn-xs btn-block' onclick='detail_hutang(\"$x->id_penjual\")'>Detail</button>";
           
@@ -71,8 +68,7 @@
                 <td>$x->nama_penjual</td>                
                 <td>$x->hp_penjual</td>                
                 <td align=right>".rupiah($x->hutang)."</td>                
-                <td align=right>".rupiah($x->terbayar)."</td>                
-                <td align=right>".rupiah($sisa)."</td>                
+                            
                
                
                 <td>$btn</td>                                
@@ -88,7 +84,7 @@
        <tfoot>
         
           <tr>
-          <td colspan="5" align="right"><b>Total Hutang</b></td>
+          <td colspan="3" align="right"><b>Total Hutang</b></td>
           <td  align="right" >
             <b><?php echo rupiah($total_hutang)?></b>
           </td>

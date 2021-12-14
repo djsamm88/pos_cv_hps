@@ -108,11 +108,11 @@ if(isset($group_penjualan))
     <small><i>Nama Pembeli</i></small>
   </div>
   <div class="col-sm-3">
-    <input type="text" name="hp_pembeli" id="hp_pembeli" value="<?php echo @$data[0]->hp_pembeli?>" class="form-control" required placeholder="HP pembeli">
+    <input type="text" name="hp_pembeli" id="hp_pembeli" readonly value="<?php echo @$data[0]->hp_pembeli?>" class="form-control" required placeholder="HP pembeli">
     <small><i>HP Pembeli</i></small>
   </div>
   <div class="col-sm-3">
-    <textarea name="alamat_lengkap" value="<?php echo @$data[0]->alamat?>" class="form-control" placeholder="alamat" id=""><?php echo @$data[0]->alamat?></textarea>
+    <textarea name="alamat" value="<?php echo @$data[0]->alamat?>" readonly class="form-control" placeholder="alamat" id="alamat"><?php echo @$data[0]->alamat?></textarea>
     <small><i>Alamat</i></small>
   </div>
   <div class="col-sm-3">
@@ -268,7 +268,7 @@ if(isset($group_penjualan))
         <tr>
           <td colspan="7" align="right"><b>Bayar</b></td>
           <td  align="right" >
-          <input id="t4_bayar" type="text"  class="form-control nomor" name="bayar" value="" required style="text-align:right;">
+          <input id="t4_bayar" type="text"  class="form-control nomor" name="bayar" value="" autocomplete="off" required style="text-align:right;">
           </td>
           <td></td>
         </tr>
@@ -276,7 +276,7 @@ if(isset($group_penjualan))
 
 
         <tr>
-          <td colspan="7" align="right"><b>Selisih</b></td>
+          <td colspan="7" align="right"><b>Hutang</b></td>
           <td  align="right" id="t4_kembali">
           
           </td>
@@ -299,9 +299,11 @@ if(isset($group_penjualan))
   </table>
 </div>
   <textarea class="form-control" name="keterangan" placeholder="keterangan"><?php echo $keterangan?></textarea><br>
+  <!--
 <div class="col-sm-6" style="text-align: left;">
     <input type="button" value="Pending" class="btn btn-warning" id="simpan_pending"> 
 </div>
+-->
 
 <div class="col-sm-6" style="text-align: right;">
     <input type="submit" value="Bayar" class="btn btn-primary" id="simpan"> 
@@ -476,6 +478,11 @@ function cek_cost(ini)
   var destinationType = "subdistrict";
   var courier = ini.val();
 
+  if(weight=='0')
+  {
+    weight='100';//biar ngga error
+  }
+
   var all = {
               weight:weight,
               origin:origin,
@@ -485,7 +492,7 @@ function cek_cost(ini)
               courier:courier
             };
   $.get("<?php echo base_url()?>index.php/ongkir/cost/",all,function(e){
-
+      console.log(e);  
       $("#ongkir").empty();
       $("#ongkir").val("");
       $("#service").empty();
@@ -541,6 +548,7 @@ $(function(){
                         label: obj.nama_pembeli,
                         value: obj.id_pelanggan,
                         hp_pembeli: obj.hp_pembeli,
+                        alamat: obj.alamat,
                         saldo: obj.saldo
                     };
                 }));
@@ -555,6 +563,7 @@ $(function(){
         $("#id_pelanggan").val(ui.item.value);
         $("#hp_pembeli").val(ui.item.hp_pembeli);
         $("#t4_saldo").val(ui.item.saldo);
+        $("#alamat").val(ui.item.alamat);
         $(this).val(ui.item.label);
         return false;
       }
@@ -709,7 +718,7 @@ function template_auto(abc)
 
         var jum_batas = "<input id='jum_per_koli' type='hidden' value='"+abc.jum_per_koli+"'>"+
                         "<input id='jum_per_lusin' type='hidden' value='"+abc.jum_per_lusin+"'>"+
-                        "<input id='id_barang' name='id_barang[]' type='hidden' value='"+abc.value+"'>";
+                        "<input id='id_barang' name='id_barang[]' type='hidden' value='"+abc.id+"'>";
 
         var template = "<tr>"+                
                 "<td>"+jum_batas+abc.id+"</td>"+
@@ -841,7 +850,7 @@ $("#t4_bayar").on("keydown keyup mousedown mouseup select contextmenu drop",func
     var tot = parseInt(buang_titik($("#t4_total").text()));
     var bayar = parseInt(buang_titik($(this).val()));
 
-    var kembalian = bayar - tot;
+    var kembalian = tot-bayar;
     $("#t4_kembali").html(formatRupiah(kembalian));
     console.log(tot);
 
