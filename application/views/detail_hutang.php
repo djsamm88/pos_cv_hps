@@ -1,5 +1,5 @@
-
-<table id="tbl_newsnya" class="table  table-striped table-bordered"  cellspacing="0" width="100%">
+Detail Hutang:
+<table id="tbl_newsnya" class="table  table-striped table-bordered"  cellspacing="0" width="100%" border="1">
       <thead>
         <tr>
               
@@ -42,7 +42,7 @@
                 <td align=right>".rupiah($x->bayar)."</td>                
                 <td align=right>".rupiah($x->hutang)."</td>                
                 
-                                             
+                 <td><a href='".base_url()."index.php/barang/print_pembelian/?group_trx=$x->group_trx' target='blank' class='btn btn-xs btn-primary'>Bukti</a></td>                             
               </tr>
           ");
           
@@ -66,4 +66,77 @@
        
   </table>
 
-          <input type="button" class="btn btn-primary" value="Download" id="download_pdf">
+<br><hr>
+Detail Terbayar:
+
+<table id="tbl_newsnya" class="table  table-striped table-bordered"  cellspacing="0" width="100%" border="1">
+      <thead>
+        <tr>
+              
+              <th>No</th>                    
+              <th>Nama Penjual</th>                     
+              <th>HP Penjual</th>                     
+                                
+              <th>tgl </th>                     
+              <th>Terbayar </th>                     
+              
+              
+
+              <th>Action</th>                     
+              
+              
+        </tr>
+      </thead>
+      <tbody>
+        <?php
+        $total_terbayar=0;         
+        $no = 0;
+        foreach($all_terbayar as $y)
+        {
+          
+          $total_terbayar +=$y->terbayar;
+          $no++;
+            
+            echo (" 
+              
+              <tr>
+                <td>$no</td>                
+                
+                <td>$y->nama_penjual</td>                
+                <td>$y->hp_penjual</td>                                            
+                <td>$y->tgl_update</td>                                
+                <td align=right>".rupiah($y->terbayar)."</td>                
+                
+                <td><a href='".base_url()."uploads/$y->url_bukti' target='blank' class='btn btn-xs btn-primary'>Bukti</a></td>
+              </tr>
+          ");
+          
+        }
+        
+        
+        ?>
+      </tbody>
+
+       <tfoot>
+        
+          <tr>
+          <td colspan="4" align="right"><b>Total Terbayar</b></td>
+          <td  align="right" >
+            <b><?php echo rupiah($total_terbayar)?></b>
+          </td>
+          <td></td>
+        </tr>
+
+      </tfoot>
+       
+  </table>
+
+
+<table class="table">
+  <tr><td>Total Hutang </td><td align="right"><?php echo rupiah($total_hutang)?></td></tr>
+  <tr><td>Total Terbayar </td><td align="right"><?php echo rupiah($total_terbayar)?></td></tr>
+  <tr><td> - </td><td align="right"><?php echo rupiah($total_hutang-$total_terbayar)?></td></tr>
+</table>
+
+
+          <a href="<?php echo base_url()?>index.php/barang/detail_hutang_xl/<?php echo $id_penjual?>" target="blank" class="btn btn-primary" > Download </a>

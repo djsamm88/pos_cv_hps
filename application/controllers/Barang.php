@@ -504,7 +504,7 @@ class Barang extends CI_Controller {
 
 		$save['total'] 			= hanya_nomor($data['total']);
 		$save['bayar'] 			= hanya_nomor($data['bayar']);
-		$save['hutang'] 			= hanya_nomor($data['hutang']);
+		$save['hutang'] 		= hanya_nomor($data['hutang']);
 
 
 
@@ -662,8 +662,40 @@ class Barang extends CI_Controller {
 	public function detail_hutang($id_penjual)
 	{
 		$data['all'] = $this->m_penjual->hutang_by_penjual($id_penjual);
-		
+		$data['all_terbayar'] = $this->m_penjual->hutang_terbayar_by_penjual($id_penjual);
+		$data['id_penjual']=$id_penjual;
 		$this->load->view('detail_hutang',$data);
+	}
+
+	public function detail_hutang_xl($id_penjual)
+	{
+		$file="detail_hutang.xls";
+		header("Content-type: application/octet-stream");
+		header("Content-Disposition: attachment; filename=$file");
+		header("Pragma: no-cache");
+		header("Expires: 0");	
+		$data['all'] = $this->m_penjual->hutang_by_penjual($id_penjual);
+		$data['all_terbayar'] = $this->m_penjual->hutang_terbayar_by_penjual($id_penjual);
+		$data['id_penjual']=$id_penjual;
+		$this->load->view('detail_hutang',$data);
+	}
+
+	public function go_bayar_hutang()
+	{
+
+		$serialize = $this->input->post();
+
+		$data['id_referensi'] = $serialize['id_penjual'];
+		$data['jumlah'] = hanya_nomor($serialize['jumlah']);
+		$data['url_bukti'] = upload_file('url_bukti');
+		$data['keterangan'] = $serialize['keterangan'] . "Kepada: ". $serialize['nama_penjual'];
+		$data['id_group'] = 17;// pembayaran ke suplier
+		$data['id_cabang'] = $this->session->userdata('id_cabang');
+
+		$this->db->set($data);
+		$this->db->insert('tbl_transaksi');
+		$id_ret = $this->db->insert_id();
+		
 	}
 	/******* pembelian ******/
 

@@ -39,6 +39,8 @@
               <th>Nama Penjual</th>                     
               <th>Hp Penjual</th>                                               
               <th>Hutang</th>                                               
+              <th>Terbayar</th>                                               
+              <th>Sisa Hutang</th>                                               
               
 
               <th>Action</th>                     
@@ -52,8 +54,12 @@
         $no = 0;
         foreach($all as $x)
         {
-          $total_hutang +=$x->hutang;
+          $sisa = $x->hutang-$x->terbayar;
+          $total_hutang +=$sisa;
+
           $btn = "<button class='btn btn-warning btn-xs btn-block' onclick='detail_hutang(\"$x->id_penjual\")'>Detail</button>";
+          
+          $btn .= "<button class='btn btn-info btn-xs btn-block' onclick='form_bayar_hutang(\"$x->id_penjual\",\"$x->nama_penjual\",\"$sisa\",)'>Bayar</button>";
           
           $no++;
             
@@ -65,6 +71,8 @@
                 <td>$x->nama_penjual</td>                
                 <td>$x->hp_penjual</td>                
                 <td align=right>".rupiah($x->hutang)."</td>                
+                <td align=right>".rupiah($x->terbayar)."</td>                
+                <td align=right>".rupiah($sisa)."</td>                
                
                
                 <td>$btn</td>                                
@@ -80,7 +88,7 @@
        <tfoot>
         
           <tr>
-          <td colspan="3" align="right"><b>Total Hutang</b></td>
+          <td colspan="5" align="right"><b>Total Hutang</b></td>
           <td  align="right" >
             <b><?php echo rupiah($total_hutang)?></b>
           </td>
@@ -112,27 +120,36 @@
         <h4 class="modal-title">Form Data</h4>
       </div>
       <div class="modal-body">
-          <form id="form_update_status">
-            <input type="hidden" name="group_trx" id="group_trx" class="form-control" readonly="readonly" >            
-
-            <div class="col-sm-4">Posisi Barang</div>
+          <form id="form_bayar_hutang">
+            <input type="" name="id_penjual" id="id_penjual" class="form-control" readonly="readonly" >            <br>
+        
+          <div class="col-sm-4">Kepada</div>
             <div class="col-sm-8">
-              <select name="status" id="status" required="required" class="form-control" placeholder="status">
-                <option value="Gudang">Gudang</option>
-              </select>
+                <input type="text" name="nama_penjual" id="nama_penjual" readonly class="form-control " placeholder="nama_penjual" >
             </div>
             <div style="clear: both;"></div><br>
-        
-        <div class="col-sm-4">Sopir</div>
-            <div class="col-sm-8"><input type="text" name="nama_supir" id="nama_supir" required="required" class="form-control " placeholder="nama_supir" ></div>
+
+
+
+          <div class="col-sm-4">Jumlah Bayar</div>
+            <div class="col-sm-8"><input type="text" name="jumlah" id="jumlah" required="required" class="form-control nomor" placeholder="jumlah" ></div>
             <div style="clear: both;"></div><br>
 
-          <div class="col-sm-4">Plat Mobil</div>
-            <div class="col-sm-8"><input type="text" name="plat_mobil" id="plat_mobil" required="required" class="form-control " placeholder="plat_mobil" ></div>
+        
+        <div class="col-sm-4">keterangan</div>
+            <div class="col-sm-8">
+                <textarea type="text" name="keterangan" id="keterangan"  class="form-control " placeholder="keterangan" ></textarea>
+            </div>
             <div style="clear: both;"></div><br>
 
-        
-        
+            
+
+            <div class="col-sm-4" style="text-align:right">Bukti</div>
+            <div class="col-sm-8">
+              <input class="form-control" name="url_bukti" id="url_bukti" type="file" accept="image/jpeg,image/gif,image/png,application/pdf,image/x-eps" required>
+            </div>
+            <div style="clear:both"></div><br>
+
 
             <div id="t4_info_form"></div>
             <button type="submit" class="btn btn-primary" id="simpan_btn"> Simpan </button>
@@ -169,12 +186,55 @@ $('.datepicker').datepicker({
   format: 'yyyy-mm-dd' 
 })
 
+hanya_nomor(".nomor");
 
 $(document).ready(function(){
 
   $('#tbl_newsnya').dataTable();
 
 });
+
+
+
+function form_bayar_hutang(id_penjual,nama_penjual,hutang)
+{
+  $("#id_penjual").val(id_penjual);
+  $("#nama_penjual").val(nama_penjual);
+  $("#jumlah").val(hutang);
+  $("#myModal").modal('show');
+}
+
+
+
+$("#form_bayar_hutang").on("submit",function(){
+  var ser = $(this).serialize();
+
+      $.ajax({
+            url: "<?php echo base_url()?>index.php/barang/go_bayar_hutang",
+            type: "POST",
+            contentType: false,
+            processData:false,
+            data:  new FormData(this),
+            beforeSend: function(){
+                //alert("sedang uploading...");
+            },
+            success: function(e){
+                console.log(e);
+                $("#t4_info_form").html("<div class='alert alert-success'>Berhasil.</div>").fadeIn().delay(3000).fadeOut();
+                  setTimeout(function(){
+                    eksekusi_controller('<?php echo base_url()?>index.php/barang/hutang_ke_penjual',document.title);
+                  },3000);
+
+                
+            },
+            error: function(er){
+                $("#t4_info_form").html("<div class='alert alert-warning'>Ada masalah! "+er+"</div>");
+            }           
+       });
+
+  return false;
+})
+
 
 $("#go_trx_jurnal").on("submit",function(){
     var mulai   = $("#mulai").val();
@@ -261,7 +321,7 @@ $("#judul2").html("DataTable "+document.title);
 $("#myModal").on("hidden.bs.modal", function () {
         var mulai="<?php echo date('Y-m-').'01'?>";
         var selesai="<?php echo date('Y-m-d',strtotime('+1 days'));?>";
-  eksekusi_controller('<?php echo base_url()?>index.php/barang/tbl_pembelian_barang?mulai='+mulai+'&selesai='+selesai+'&id_cabang='+id_cabang,'Status Order');
+  eksekusi_controller('<?php echo base_url()?>index.php/barang/hutang_ke_penjual?mulai='+mulai+'&selesai='+selesai+'&id_cabang=<?php echo $this->session->userdata('id_cabang')?>','Status Order');
 });
 
 

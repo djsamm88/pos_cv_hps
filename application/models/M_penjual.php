@@ -28,22 +28,47 @@ class M_penjual extends CI_Model {
 		$q = $this->db->query("SELECT 
 										a.id_penjual,
 										a.nama_penjual,
-										a.hp_penjual,SUM(a.hutang) as hutang 
+										a.hp_penjual,
+										SUM(a.hutang) as hutang,
+										b.terbayar
+
+
+
 								FROM (
 										SELECT * 
 											FROM tbl_pembelian_barang 
 											WHERE hutang > 0
 											GROUP BY group_trx
 									) a 
-								 GROUP BY id_penjual");
+								LEFT JOIN (
+										SELECT SUM(jumlah) AS terbayar,id_referensi AS id_penjual,tgl_update FROM `tbl_transaksi` WHERE id_group=17 GROUP BY id_penjual
+									)b ON a.id_penjual=b.id_penjual
+								 GROUP BY id_penjual
+							");
 		return $q->result();
 	}
+
 
 	
 
 	public function hutang_by_penjual($id_penjual)
 	{
 		$q = $this->db->query("SELECT * FROM `tbl_pembelian_barang` WHERE hutang > 0 AND id_penjual='$id_penjual' GROUP BY group_trx");
+		return $q->result();
+	}
+
+	public function hutang_terbayar_by_penjual($id_penjual)
+	{
+		$q = $this->db->query("SELECT 
+								a.jumlah AS terbayar,
+								a.id_referensi AS id_penjual,
+								a.tgl_update ,
+								b.nama_penjual,
+								b.hp_penjual,
+								a.url_bukti
+								FROM `tbl_transaksi` a 
+								LEFT JOIN tbl_penjual b ON a.id_referensi=b.id_penjual
+								WHERE id_group=17 AND id_penjual='$id_penjual'");
 		return $q->result();
 	}
 
