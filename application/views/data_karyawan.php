@@ -55,7 +55,7 @@
                  ";
           $sisa=$x->hutang-$x->terbayar;
 
-          if($x->hutang>0)
+          if($sisa>0)
           {
             $btn .= "<button class=' btn btn-xs  btn-info' onclick='detail_hutang($x->id);return false;'>Detail Hutang</button>";
             $btn .= " <button class='btn btn-success btn-xs ' onclick='form_bayar_hutang(\"$x->id\",\"$x->nama\",\"$sisa\",)'>Bayar</button>";;
@@ -363,7 +363,7 @@ $("#form_pelanggan").on("submit",function(){
 })
 
 
-$("#myModal").on("hidden.bs.modal", function () {
+$("#myModal,#myModalBayar").on("hidden.bs.modal", function () {
   eksekusi_controller('<?php echo base_url()?>index.php/karyawan/data','Data karyawan');
 });
 </script>
