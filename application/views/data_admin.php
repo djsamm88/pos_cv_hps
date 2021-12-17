@@ -146,6 +146,7 @@
                   <option value="4"><?php echo level('4')?></option>
                   <option value="6"><?php echo level('6')?></option>
                   <option value="7"><?php echo level('7')?></option>
+                  
               </select>
             </div>
             <div style="clear: both;"></div><br>

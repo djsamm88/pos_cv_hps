@@ -26,6 +26,12 @@
           </a>
         </li>
 
+         <li>
+          <a href="#" onclick="eksekusi_controller('<?php echo base_url()?>index.php/karyawan/data','Karyawan');return false;">
+            <i class="fa fa-users"></i> <span>Karyawan</span>
+          </a>
+        </li>
+
 
 
 

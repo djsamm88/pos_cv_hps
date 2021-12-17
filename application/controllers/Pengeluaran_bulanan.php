@@ -17,6 +17,7 @@ class Pengeluaran_bulanan extends CI_Controller {
 		//$this->load->library('datatables');
 		$this->load->model('m_pengeluaran_bulanan');
 		$this->load->model('m_pembayaran');
+		$this->load->model('m_karyawan');
 
 	}
 
@@ -56,6 +57,7 @@ class Pengeluaran_bulanan extends CI_Controller {
 	{
 		
 		$data['all'] = $this->m_pengeluaran_bulanan->m_data();
+		$data['karyawans'] = $this->m_karyawan->m_data();	
 		$this->load->view('form_pengeluaran_bulanan',$data);
 	}
 
@@ -73,7 +75,7 @@ class Pengeluaran_bulanan extends CI_Controller {
 		$id_trx = $this->db->insert_id();
 
 			$ket = $data['nama_pengeluaran']."- ".$data['keterangan']." : jumlah=".$data['jumlah'];
-
+			
 			/*********** insert ke transaksi **************/	
 			$ser_trx = array(
 							"id_group"=>"4",							

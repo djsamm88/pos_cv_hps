@@ -32,7 +32,7 @@
             <div class="col-sm-4" style="text-align:right">Pilih pengeluaran</div>
             <div class="col-sm-8">
               <select class="form-control" name="nama_pengeluaran" id="nama_pengeluaran" required>
-                
+                  <option value="">--- Pilih Trx ---</option>
                 <?php 
                   foreach ($all as $key) {
                     echo "<option value='$key->nama_pengeluaran'>$key->nama_pengeluaran</option>";
@@ -42,6 +42,21 @@
             </div> 
             <div style="clear:both"></div><br>
 
+            <div class="row" id="t4_karyawan" style="display:none;">
+            <div class="col-sm-4" style="text-align:right">Nama Karyawan</div>
+            <div class="col-sm-8">
+              
+              <select class="form-control" name="id_karyawan" id="id_karyawan" >
+                  <option value="">--- Pilih Karyawan ---</option>
+                <?php 
+                  foreach ($karyawans as $kar) {
+                    echo "<option value='$kar->id'>$kar->nama - $kar->jabatan</option>";
+                  }
+                ?>
+              </select>
+            </div> 
+            <div style="clear:both"></div><br>
+            </div>
 
             <div class="col-sm-4" style="text-align:right">Jumlah Pengeluaran</div>
             <div class="col-sm-8">
@@ -95,10 +110,21 @@ $('.datepicker').datepicker({
 })
 hanya_nomor(".nomor");
 
-
+$("#nama_pengeluaran").on("change",function(){
+  var nama_pengeluaran = $(this).val();
+  if(nama_pengeluaran=="Gaji Karyawan" || nama_pengeluaran=="Hutang Karyawan")
+  {
+    $("#t4_karyawan").show();
+  }else{
+    $("#t4_karyawan").hide();
+  }
+})
 
 $("#form_pengeluarannya").on("submit",function(){
   var ser = $(this).serialize();
+
+    if(confirm("Anda yakin trx?"))
+    {
 
       $.ajax({
             url: "<?php echo base_url()?>index.php/"+classnya+"/simpan_pengeluaran_bulanan",
@@ -122,6 +148,8 @@ $("#form_pengeluarannya").on("submit",function(){
                 $("#t4_info_form").html("<div class='alert alert-warning'>Ada masalah! "+er+"</div>");
             }           
        });
+    }
+    
 
   return false;
 })

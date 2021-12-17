@@ -55,7 +55,7 @@ class Pelanggan extends CI_Controller {
 		$data['id_referensi'] = $serialize['id_pelanggan'];
 		$data['jumlah'] = hanya_nomor($serialize['jumlah']);
 		$data['url_bukti'] = upload_file('url_bukti');
-		$data['keterangan'] = $serialize['keterangan'] . "Dari: ". $serialize['nama_pembeli'];
+		$data['keterangan'] = $serialize['keterangan'] . " - Dari: ". $serialize['nama_pembeli'];
 		$data['id_group'] = 18;// pembayaran ke suplier
 		$data['id_cabang'] = $this->session->userdata('id_cabang');
 

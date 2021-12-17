@@ -52,7 +52,10 @@
                                 <button class='btn btn-danger btn-xs' onclick='hapus($x->id);return false;'>Hapus</button>    ";
                         $no++;
                           
-                      
+                          if($x->id==1 || $x->id==2)
+                          {
+                            $btn = "";
+                          }
                           echo (" 
                             
                             <tr>

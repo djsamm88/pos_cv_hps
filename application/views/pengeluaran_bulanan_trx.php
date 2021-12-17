@@ -3,7 +3,7 @@
     <section class="content-header">
       <h1 id="judul">
         Selamat datang di Sistem Informasi 
-        <small>UMROH</small>
+        <small>POS</small>
       </h1>      
     </section>
 
@@ -48,13 +48,20 @@
         foreach($all as $x)
         {
           $no++;
+     
+            $nama_karyawan = "";
+            if($x->nama_pengeluaran=="Gaji Karyawan"  || $x->nama_pengeluaran=="Hutang Karyawan")
+            {
+                $y = $this->m_karyawan->m_by_id($x->id_karyawan);
+                $nama_karyawan = $y[0]->nama;
+            }
             
             echo (" 
               
               <tr>
                 <td>$no</td>                
                 <td>".tglindo($x->tgl_update)."</td>
-                <td>$x->nama_pengeluaran</td>                                
+                <td>$x->nama_pengeluaran <br> <b>$nama_karyawan</b></td>                                
                 <td>$x->keterangan</td>                                
                 <td><a target='blank' href='".base_url()."uploads/$x->url_bukti'>$x->url_bukti</a></td>                          
                 <td style='text-align:right'>".rupiah($x->jumlah)."</td>                                
