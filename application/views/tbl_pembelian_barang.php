@@ -109,7 +109,7 @@
           if($x->status=='Gudang')
           {
           
-            $btn .= "<button class='btn btn-info btn-xs btn-block' onclick='selesai_pembelian(\"$x->group_trx\")'>Set Selesai</button>";
+            //$btn .= "<button class='btn btn-info btn-xs btn-block' onclick='selesai_pembelian(\"$x->group_trx\")'>Set Selesai</button>";
           }
           $no++;
             
