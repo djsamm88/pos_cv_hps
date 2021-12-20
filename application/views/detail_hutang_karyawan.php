@@ -150,3 +150,12 @@ Detail Terbayar:
 
 
           <a href="<?php echo base_url()?>index.php/karyawan/detail_hutang_xl/<?php echo $id?>" target="blank" class="btn btn-primary" > Download </a>
+
+
+
+
+
+
+<script type="text/javascript">
+    $("html, body").animate({ scrollTop: $(document).height() }, 1000);
+</script>

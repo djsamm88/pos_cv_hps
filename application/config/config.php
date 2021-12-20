@@ -523,7 +523,7 @@ $config['rewrite_short_tags'] = FALSE;
 $config['proxy_ips'] = '';
 
 
-$config['app_name']="APLIKASI KASIR";
-$config['app_client1']="TAMORA STORE";
+$config['app_name']="APLIKASI POS";
+$config['app_client1']="CV HSP";
 $config['app_client2']="Medan";
 $config['app_client3']="Sumatera Utara";

@@ -209,7 +209,7 @@
           </ul>
         </li>
 
-
+        <!--
 
          <li>
           <a href="#" onclick="eksekusi_controller('<?php echo base_url()?>index.php/barang/pesanan_member','Pesanan Member');return false;">
@@ -224,7 +224,7 @@
               <i class="fa fa-link"></i> <span>Penjualan Member</span>
             </a>
           </li>
-
+        -->
 
         <li class="treeview">
           
@@ -264,7 +264,7 @@
         </li>
 
 
-
+          <!--
         <li class="treeview">
           
           <a href="#"><i class="fa fa-users"></i> <span>Penjual</span>
@@ -291,6 +291,7 @@
             
           </ul>
         </li>
+        -->
 
 
         <!--
@@ -316,6 +317,44 @@
 
 
 
+        <li class="treeview">
+          
+          <a href="#"><i class="fa fa-institution"></i> <span>Barang Pinjam <span class="label label-warning pull-right badge_gudang"></span></span></span>
+            <span class="pull-right-container">
+                <i class="fa fa-angle-left pull-right"></i>
+              </span>
+          </a>
+
+          <ul class="treeview-menu">
+             <li>
+              <a href="#" onclick="eksekusi_controller('<?php echo base_url()?>index.php/barang_pinjam/data','Master Gudang');return false;">
+                <i class="fa fa-link"></i> <span>Master</span>
+              </a>
+            </li>
+            
+             <li>
+              <a href="#" onclick="eksekusi_controller('<?php echo base_url()?>index.php/barang_pinjam/form_peminjaman','Form Pinjam');return false;">
+                <i class="fa fa-link"></i> <span>Form Pinjam</span>
+              </a>
+            </li>
+            
+            
+            <li>
+              <a href="#" onclick="eksekusi_controller('<?php echo base_url()?>index.php/barang_pinjam/status_barang_pinjam','Status Pinjam');return false;">
+                <i class="fa fa-link"></i> <span>Status Pinjam</span>
+              </a>
+            </li>
+            
+
+
+
+            
+            
+          </ul>
+        </li>
+
+
+        <!--
 
         <li class="treeview">
           
@@ -350,7 +389,7 @@
           </ul>
         </li>
 
-
+    -->
 
         
 
@@ -434,7 +473,11 @@
 
           <ul class="treeview-menu">
 
-
+            <li>
+              <a href="#" onclick="eksekusi_controller('<?php echo base_url()?>index.php/penjual/data','Master Penjual');return false;">
+                <i class="fa fa-link"></i> <span>Data</span>
+              </a>
+            </li>
 
         <li>
           <a href="#" onclick="eksekusi_controller('<?php echo base_url()?>index.php/barang/form_pembelian',' Order Suplier');return false;">

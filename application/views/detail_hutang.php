@@ -144,3 +144,8 @@ Detail Terbayar:
 
 
           <a href="<?php echo base_url()?>index.php/barang/detail_hutang_xl/<?php echo $id_penjual?>" target="blank" class="btn btn-primary" > Download </a>
+
+
+<script type="text/javascript">
+    $("html, body").animate({ scrollTop: $(document).height() }, 1000);
+</script>

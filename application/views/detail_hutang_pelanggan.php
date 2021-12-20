@@ -64,6 +64,73 @@ Detail Hutang:
   </table>
 
 <br><hr>
+
+Detail Hutang Pinjam Barang:
+<table id="tbl_newsnya" class="table  table-striped table-bordered"  cellspacing="0" width="100%" border="1">
+      <thead>
+        <tr>
+              
+              <th>No</th>                    
+              <th>Nama Pelanggan</th>                     
+              <th>HP Pelanggan</th>                     
+              <th>group_trx </th>                     
+              <th>tgl </th>                     
+              <th>total </th>                     
+                                   
+              
+              
+
+              <th>Action</th>                     
+              
+              
+        </tr>
+      </thead>
+      <tbody>
+        <?php
+        $total_hutang_pinjam=0;         
+        $no = 0;
+        foreach($all_hutang_pinjam as $z)
+        {
+          
+          $total_hutang_pinjam +=$z->hutang;
+          $no++;
+            
+            echo (" 
+              
+              <tr>
+                <td>$no</td>                
+                
+                <td>$z->nama_pelanggan</td>                
+                <td>$z->hp_pembeli</td>                
+                <td>$z->group_trx</td>                
+                <td>$z->tgl_update</td>                                
+                <td align=right>".rupiah($z->hutang)."</td>                
+                
+                 <td><a href='".base_url()."index.php/barang_pinjam/struk_pinjam/$z->group_trx' target='blank' class='btn btn-xs btn-primary'>Bukti</a></td>                             
+              </tr>
+          ");
+          
+        }
+        
+        
+        ?>
+      </tbody>
+
+       <tfoot>
+        
+          <tr>
+          <td colspan="5" align="right"><b>Total Hutang</b></td>
+          <td  align="right" >
+            <b><?php echo rupiah($total_hutang_pinjam)?></b>
+          </td>
+          <td></td>
+        </tr>
+
+      </tfoot>
+       
+  </table>
+
+<br><hr>
 Detail Terbayar:
 
 <table id="tbl_newsnya" class="table  table-striped table-bordered"  cellspacing="0" width="100%" border="1">
@@ -137,10 +204,15 @@ Detail Terbayar:
 
 
 <table class="table">
-  <tr><td>Total Hutang </td><td align="right"><?php echo rupiah($total_hutang)?></td></tr>
+  <tr><td>Total Hutang </td><td align="right"><?php echo rupiah(($total_hutang_pinjam+$total_hutang))?></td></tr>
   <tr><td>Total Terbayar </td><td align="right"><?php echo rupiah($total_terbayar)?></td></tr>
-  <tr><td> - </td><td align="right"><?php echo rupiah($total_hutang-$total_terbayar)?></td></tr>
+  <tr><td> - </td><td align="right"><?php echo rupiah(($total_hutang_pinjam+$total_hutang)-$total_terbayar)?></td></tr>
 </table>
 
 
           <a href="<?php echo base_url()?>index.php/pelanggan/detail_hutang_pelanggan_xl/<?php echo $id_pelanggan?>" target="blank" class="btn btn-primary" > Download </a>
+
+
+<script type="text/javascript">
+    $("html, body").animate({ scrollTop: $(document).height() }, 1000);
+</script>

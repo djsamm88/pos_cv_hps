@@ -19,11 +19,18 @@ class M_pelanggan extends CI_Model {
 
 	public function m_data()
 	{
-		$q = $this->db->query("SELECT a.*,b.hutang,c.terbayar
+		$q = $this->db->query("SELECT a.*,b.hutang AS hutang_kasir,(d.hutang) AS hutang_pinjam_barang , c.terbayar
 								FROM tbl_pelanggan a 
 									LEFT JOIN(
 										SELECT SUM(hutang) as hutang,id_pelanggan FROM tbl_transaksi 										 WHERE id_pelanggan<>0 GROUP BY id_pelanggan
 									    )b ON a.id_pelanggan=b.id_pelanggan
+
+									LEFT JOIN(
+										SELECT a.id_pelanggan,SUM(a.hutang) as hutang FROM (
+											SELECT id_pelanggan, group_trx,hutang FROM `tbl_barang_pinjam_trx`  GROUP BY  group_trx
+											    )a GROUP BY id_pelanggan
+									    )d ON a.id_pelanggan=d.id_pelanggan
+									
 									LEFT JOIN (
 
 										SELECT SUM(jumlah) AS terbayar,id_referensi AS id_pelanggan,tgl_update FROM tbl_transaksi WHERE id_group=18 GROUP BY id_referensi
@@ -39,7 +46,20 @@ class M_pelanggan extends CI_Model {
 	{
 		$q = $this->db->query("SELECT a.*,b.nama_pembeli,b.hp_pembeli,a.id_referensi AS group_trx FROM `tbl_transaksi` a 
 										LEFT JOIN tbl_pelanggan b ON a.id_pelanggan=b.id_pelanggan
-									WHERE a.hutang > 0 AND a.id_pelanggan='$id_pelanggan' ");
+
+									WHERE a.hutang > 0 AND a.id_pelanggan='$id_pelanggan' 
+									");
+		return $q->result();
+	}
+
+
+	public function hutang_pinjam_by_pelanggan($id_pelanggan)
+	{
+		$q = $this->db->query("SELECT * FROM tbl_barang_pinjam_trx 
+											WHERE
+												id_pelanggan='$id_pelanggan' 
+												GROUP BY group_trx
+									");
 		return $q->result();
 	}
 

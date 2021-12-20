@@ -37,7 +37,8 @@
                <th width="100px">ID</th>
                 <th>nama_pembeli</th>
                 <th>email / HP</th>
-                <th>Hutang</th>        
+                <th>Hutang Beli</th>        
+                <th>Hutang Pinjam </th>        
                 <th>Terbayar</th>        
                 <th>Sisa</th>        
                 <th>tgl_daftar</th>
@@ -55,10 +56,10 @@
         foreach($all as $x)
         {
 
-          $sisa = ($x->hutang - $x->terbayar);
+          $sisa = (($x->hutang_kasir+$x->hutang_pinjam_barang) - $x->terbayar);
 
           $btn = "<button class='btn btn-warning btn-xs btn-block' onclick='edit_admin($x->id_pelanggan);return false;'>Edit</button>
-                  <button class='btn btn-danger btn-xs btn-block' onclick='hapus_admin($x->id_pelanggan);return false;'>Hapus</button>    ";
+                  <!--<button class='btn btn-danger btn-xs btn-block' onclick='hapus_admin($x->id_pelanggan);return false;'>Hapus</button>  -->  ";
 
           $btnStatus = $x->status=="biasa"?"<button class='btn btn-xs btn-block btn-primary' onclick='jadikan_member($x->id_pelanggan)'>Jadikan member</button>":"";
           $no++;
@@ -82,7 +83,8 @@
                 <td>$x->nama_pembeli</td>
                 <td>$x->email_pembeli <br> $x->hp_pembeli</td>
                 
-                <td><b>".rupiah($x->hutang)."</b>  </td>
+                <td><b>".rupiah($x->hutang_kasir)."</b>  </td>
+                <td><b>".rupiah($x->hutang_pinjam_barang)."</b>  </td>
                 <td><b>".rupiah($x->terbayar)."</b> </td>
                 <td><b>".rupiah($sisa)."</b> </td>
                 <td>$x->tgl_daftar</td>

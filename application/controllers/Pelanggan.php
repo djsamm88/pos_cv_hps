@@ -29,6 +29,7 @@ class Pelanggan extends CI_Controller {
 	public function detail_hutang_pelanggan($id_pelanggan)
 	{
 		$data['all'] = $this->m_pelanggan->hutang_by_pelanggan($id_pelanggan);
+		$data['all_hutang_pinjam'] = $this->m_pelanggan->hutang_pinjam_by_pelanggan($id_pelanggan);
 		$data['all_terbayar'] = $this->m_pelanggan->hutang_terbayar_by_pelanggan($id_pelanggan);
 		$data['id_pelanggan']=$id_pelanggan;
 		$this->load->view('detail_hutang_pelanggan',$data);
@@ -43,6 +44,7 @@ class Pelanggan extends CI_Controller {
 		header("Expires: 0");	
 		$data['all'] = $this->m_pelanggan->hutang_by_pelanggan($id_pelanggan);
 		$data['all_terbayar'] = $this->m_pelanggan->hutang_terbayar_by_pelanggan($id_pelanggan);
+		$data['all_hutang_pinjam'] = $this->m_pelanggan->hutang_pinjam_by_pelanggan($id_pelanggan);
 		$data['id_pelanggan']=$id_pelanggan;
 		$this->load->view('detail_hutang_pelanggan',$data);
 	}
