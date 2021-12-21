@@ -326,6 +326,7 @@ $("#tbl_datanya").on("click","tbody tr td button#remove_order",function(x){
 
 $("#lama_pinjam_id").on("keydown keyup mousedown mouseup select contextmenu drop",function(){
   $(".lama_pinjamnya").val($(this).val());
+  
 })
 
 

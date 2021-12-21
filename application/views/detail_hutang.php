@@ -36,7 +36,7 @@ Detail Hutang:
                 <td>$x->nama_penjual</td>                
                 <td>$x->hp_penjual</td>                
                 <td>$x->group_trx</td>                
-                <td>$x->tgl</td>                                
+                <td>".tanggalindo($x->tgl)."</td>                                
                 <td align=right>".rupiah($x->total)."</td>                
                 
                  <td><a href='".base_url()."index.php/barang/print_pembelian/?group_trx=$x->group_trx' target='blank' class='btn btn-xs btn-primary'>Bukti</a></td>                             
@@ -108,7 +108,7 @@ Detail Terbayar:
                 
                 <td>$y->nama_penjual</td>                
                 <td>$y->hp_penjual</td>                                            
-                <td>$y->tgl_update</td>                                
+                <td>".tanggalindo($y->tgl_update)."</td>                                
                 <td align=right>".rupiah($y->terbayar)."</td>                
                 
                 <td>$btn</td>

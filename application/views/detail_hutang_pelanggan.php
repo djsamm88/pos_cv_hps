@@ -36,7 +36,7 @@ Detail Hutang:
                 <td>$x->nama_pembeli</td>                
                 <td>$x->hp_pembeli</td>                
                 <td>$x->group_trx</td>                
-                <td>$x->tgl_update</td>                                
+                <td>".tanggalindo($x->tgl_update)."</td>                                
                 <td align=right>".rupiah($x->hutang)."</td>                
                 
                  <td><a href='".base_url()."index.php/barang/struk_penjualan/$x->group_trx' target='blank' class='btn btn-xs btn-primary'>Bukti</a></td>                             
@@ -103,7 +103,7 @@ Detail Hutang Pinjam Barang:
                 <td>$z->nama_pelanggan</td>                
                 <td>$z->hp_pembeli</td>                
                 <td>$z->group_trx</td>                
-                <td>$z->tgl_update</td>                                
+                <td>".tanggalindo($z->tgl_update)."</td>                                
                 <td align=right>".rupiah($z->hutang)."</td>                
                 
                  <td><a href='".base_url()."index.php/barang_pinjam/struk_pinjam/$z->group_trx' target='blank' class='btn btn-xs btn-primary'>Bukti</a></td>                             
@@ -175,7 +175,7 @@ Detail Terbayar:
                 
                 <td>$y->nama_pembeli</td>                
                 <td>$y->hp_pembeli</td>                                            
-                <td>$y->tgl_update</td>                                
+                <td>".tanggalindo($y->tgl_update)."</td>                                
                 <td align=right>".rupiah($y->terbayar)."</td>                
                 
                 <td>$btn</td>

@@ -204,7 +204,7 @@ function form_bayar_hutang(id_penjual,nama_penjual,hutang)
 
 $("#form_bayar_hutang").on("submit",function(){
   var ser = $(this).serialize();
-
+      $("#simpan_btn").hide();
       $.ajax({
             url: "<?php echo base_url()?>index.php/barang/go_bayar_hutang",
             type: "POST",
@@ -218,7 +218,8 @@ $("#form_bayar_hutang").on("submit",function(){
                 console.log(e);
                 $("#t4_info_form").html("<div class='alert alert-success'>Berhasil.</div>").fadeIn().delay(3000).fadeOut();
                   setTimeout(function(){
-                    eksekusi_controller('<?php echo base_url()?>index.php/barang/hutang_ke_penjual',document.title);
+                    //eksekusi_controller('<?php echo base_url()?>index.php/barang/hutang_ke_penjual',document.title);
+                    $("#myModal").modal('hide');
                   },3000);
 
                 

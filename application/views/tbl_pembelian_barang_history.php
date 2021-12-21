@@ -124,7 +124,7 @@
                 <td>".rupiah($x->total)."</td>                
                 <td>".rupiah($x->bayar)."</td>                
                 <td>".rupiah($x->hutang)."</td>                
-                <td>$x->tgl</td>                
+                <td>".tanggalindo($x->tgl)."</td>                
                 <td>$x->tgl_update</td>                
                 <td>$x->status</td>                
                 <td>$x->nama_supir</td>                

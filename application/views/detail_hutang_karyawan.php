@@ -41,7 +41,7 @@ Detail Hutang:
                               
                 <td>$x->nama_pengeluaran</td>                
                 <td>$x->keterangan</td>                
-                <td>$x->tgl_trx</td>                
+                <td>".tanggalindo($x->tgl_trx)."</td>                
                 <td align=right>".rupiah($x->hutang)."</td>  
                 
                 
@@ -114,7 +114,7 @@ Detail Terbayar:
                 
                 <td>$y->nama</td>                
                 <td>$y->jabatan</td>                                            
-                <td>$y->tgl_update</td>                                
+                <td>".tanggalindo($y->tgl_update)."</td>                                
                 <td align=right>".rupiah($y->terbayar)."</td>                
                 
                 <td>$btn</td>
