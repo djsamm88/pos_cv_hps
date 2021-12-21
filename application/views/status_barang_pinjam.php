@@ -75,7 +75,7 @@
               <tr>
                 <td>$no</td>
                           
-                <td>$x->tgl_mulai <br>s/d<br> $x->tgl_selesai <br> <span class='badge badge-warning'>$x->lama_pinjam Bulan</badge></td>
+                <td>$x->tgl_mulai <br>s/d<br> $x->tgl_selesai <br> <span class='badge badge-warning'>$x->lama_pinjam Hari</badge></td>
                 
                 
                 

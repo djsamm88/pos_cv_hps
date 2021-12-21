@@ -133,11 +133,13 @@
               </a>
             </li>
 
+              <!--
              <li>
               <a href="#" onclick="eksekusi_controller('<?php echo base_url()?>index.php/barang/data_barcode','Generate Barcode Barang');return false;">
                 <i class="fa fa-link"></i> <span>Barcode Generator</span>
               </a>
             </li>
+          -->
 
             
              <li>
@@ -176,12 +178,13 @@
             </a>
           </li>
 
-
+            <!--
              <li>
               <a href="#" onclick="eksekusi_controller('<?php echo base_url()?>index.php/barang/lap_pending/?id_cabang=<?php echo $this->session->userdata('id_cabang')?>','Transaksi Pending');return false;">
                 <i class="fa fa-link"></i> <span>Pending  <span class="label label-danger pull-right badge_pending"></span></span>
               </a>
             </li>
+          -->
 
 
             <li>
@@ -536,21 +539,24 @@
                 <i class="fa fa-lock"></i> <span>Barang Masuk</span>
               </a>
             </li>
-            
+            <!--
             <li>
               <a href="#" onclick="eksekusi_controller('<?php echo base_url()?>index.php/barang/stok_gudang/1','Stok Gudang');return false;">
                 <i class="fa fa-link"></i> <span>Stok Gudang <span class="label label-warning pull-right badge_gudang"></span></span></span>
               </a>
             </li>
+          -->
 
             
             
-
+            <!--
             <li>
               <a href="#" onclick="eksekusi_controller('<?php echo base_url()?>index.php/barang/log_pindah_gudang','Log Gudang');return false;">
                 <i class="fa fa-link"></i> <span>Log Perpindahan </span>
               </a>
             </li>
+          -->
+
           </ul>
         </li>
         <?php 

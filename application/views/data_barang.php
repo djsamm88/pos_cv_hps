@@ -38,7 +38,7 @@
         <tr>
               
               <th>No</th>
-              <th width="10px"> id_barcode</th>           
+              
               <th>Barang</th>                     
               <th>Stok</th>                     
               <th>Harga Beli</th>                     
@@ -78,7 +78,7 @@
               
               <tr>
                 <td>$no</td>
-                <td>$x->id_barcode</td>
+                
                 <td>$x->nama_barang</td>                
                 <td>$x->qty</td>                
                 <td>".rupiah($x->harga_pokok)."</td>                
@@ -136,10 +136,7 @@
             <input type="hidden" name="id" id="id" class="form-control" readonly="readonly">            
 
 
-            <div class="col-sm-4">ID Barang</div>
-            <div class="col-sm-8"><input type="text" name="id_barcode" id="id_barcode" required="required" class="form-control" placeholder="id_barcode"></div>
-            <div style="clear: both;"></div><br>
-        
+<input type="hidden" name="id_barcode" id="id_barcode"  class="form-control" placeholder="id_barcode">
 
           <div class="col-sm-4">Nama Barang</div>
             <div class="col-sm-8"><input type="text" name="nama_barang" id="nama_barang" required="required" class="form-control" placeholder="nama_barang"></div>

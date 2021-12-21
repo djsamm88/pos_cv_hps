@@ -53,7 +53,7 @@
 
 </div>
 <br>
-<div class="col-sm-3">Lama Peminjaman (Bulan)</div>
+<div class="col-sm-3">Lama Peminjaman (Hari)</div>
 <div class="col-sm-3">
 <input class='form-control nomor'  type='text' id='lama_pinjam_id'   placeholder='lama_pinjam_id' required value='1' autocomplete='off' >
 </div>
@@ -71,7 +71,7 @@
               <th>Barang</th>              
               <th>Harga/Bulan</th>                      
               <th>Jumlah</th>                                   
-              <th>lama Sewa/bulan</th>                                   
+              <th>lama Sewa/hari</th>                                   
               
               <th>Sub Total</th>
               

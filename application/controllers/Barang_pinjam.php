@@ -74,7 +74,7 @@ class Barang_pinjam extends CI_Controller {
 			$serialize['lama_pinjam'] = hanya_nomor($data['lama_pinjam'][$i]);
 			$serialize['sub_total'] = hanya_nomor($data['sub_total'][$i]);
 
-			$serialize['tgl_selesai'] = date('Y-m-d', strtotime("+".$serialize['lama_pinjam']." months", strtotime(date('Y-m-d'))));
+			$serialize['tgl_selesai'] = date('Y-m-d', strtotime("+".$serialize['lama_pinjam']." day", strtotime(date('Y-m-d'))));
 		
 			$serialize['harga_per_bulan'] = hanya_nomor($data['harga_per_bulan'][$i]);
 			

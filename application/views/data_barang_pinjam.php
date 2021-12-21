@@ -33,10 +33,9 @@
               
               <th>No</th>
                <th>id_barang_pinjam</th>
-                <th>nama_barang</th>
-                <th>code_barcode</th>
+                <th>nama_barang</th>                
                 <th>stok_barang</th>
-                <th>harga_sewa/bulan</th>
+                <th>harga_sewa/hari</th>
                 <th>tgl_update</th>
                 <th>id_cabang</th> 
               <th>Action</th>
@@ -61,8 +60,7 @@
               <tr>
                 <td>$no</td>
                 <td>$x->id_barang_pinjam</td>
-                <td>$x->nama_barang</td>
-                <td>$x->code_barcode</td>
+                <td>$x->nama_barang</td>                
                 <td>".rupiah($x->stok_barang)."</td>
                 <td>".rupiah($x->harga_sewa)."</td>
                 <td>$x->tgl_update</td>
@@ -104,29 +102,19 @@
       </div>
       <div class="modal-body">
           <form id="form_data_barang_pinjam">
-            <div class="col-sm-4 judul">id_cabang</div>
-<div class="col-sm-8">
-  <input class="form-control" name="id_cabang" id="id_cabang" required readonly value="<?php echo $this->session->userdata('id_cabang')?>">
-  </div>
-  <div style="clear:both"></div><br>
-
-            <div class="col-sm-4 judul">id_barang_pinjam</div>
-<div class="col-sm-8">
-  <input class="form-control" name="id_barang_pinjam" id="id_barang_pinjam"  readonly>
-  </div>
-  <div style="clear:both"></div><br>
-
+  
+  <input class="form-control" type="hidden" name="id_cabang" id="id_cabang" required readonly value="<?php echo $this->session->userdata('id_cabang')?>">
+  
+  <input class="form-control" type="hidden" name="id_barang_pinjam" id="id_barang_pinjam"  readonly>
+  <input class="form-control" name="code_barcode" type="hidden" id="code_barcode" >
 <div class="col-sm-4 judul">nama_barang</div>
 <div class="col-sm-8">
   <input class="form-control" name="nama_barang" id="nama_barang" required>
   </div>
   <div style="clear:both"></div><br>
 
-<div class="col-sm-4 judul">code_barcode</div>
-<div class="col-sm-8">
-  <input class="form-control" name="code_barcode" id="code_barcode" >
-  </div>
-  <div style="clear:both"></div><br>
+
+
 
 <div class="col-sm-4 judul">stok_barang</div>
 <div class="col-sm-8">
@@ -134,7 +122,7 @@
   </div>
   <div style="clear:both"></div><br>
 
-<div class="col-sm-4 judul">harga_sewa/bulan</div>
+<div class="col-sm-4 judul">harga_sewa/hari</div>
 <div class="col-sm-8">
   <input class="form-control nomor" name="harga_sewa" id="harga_sewa" required>
   </div>

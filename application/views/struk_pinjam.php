@@ -45,7 +45,7 @@ font-size:10px;
 	<td>lama_pinjam</td>
 	<td>tgl_mulai</td>
 	<td>tgl_selesai</td>
-	<td>harga_per_bulan</td>
+	<td>harga_per_hari</td>
 	<td>group_trx</td>
 	<td>jumlah</td>
 	<td>nama_barang</td>
@@ -87,7 +87,7 @@ font-size:10px;
 
 <table>
 
-<tr><td>lama_pinjam</td> <td><?php echo $x[0]->lama_pinjam?> Bulan</td></tr>
+<tr><td>lama_pinjam</td> <td><?php echo $x[0]->lama_pinjam?> Hari</td></tr>
 <tr><td>tgl_mulai</td> <td><?php echo $x[0]->tgl_mulai?></td></tr>
 <tr><td>tgl_selesai</td> <td><?php echo $x[0]->tgl_selesai?></td></tr>
 <tr><td>harga_total</td> <td><?php echo rupiah($x[0]->harga_total)?></td></tr>

@@ -45,7 +45,7 @@
                 <th>tgl_trx_terakhir</th>
                         
                 <th>Status</th>
-                <th>password</th>
+                
               <th>Action</th>
               
         </tr>
@@ -91,8 +91,6 @@
                 <td>$x->tgl_trx_terakhir</td>
                 
                 <td>$x->status <br> $btnStatus</td>
-                <td>$x->password</td>
-                
 
                 <td>
                   $btn $btnHutang
@@ -158,13 +156,9 @@
             <br>
 
 
-            <div class="col-sm-4 judul">password</div>
-            <div class="col-sm-8">
-              <input class="form-control" name="password" id="password" type="text" required>
-            </div>
-            <div style="clear:both"></div>
-            <br>
-
+            
+              <input class="form-control" type="hidden" name="password" id="password" type="text" >
+            
 
 
 
