@@ -9,6 +9,36 @@ if (!defined('BASEPATH'))exit('No direct script access allowed');
 			$this->load->helper('custom_func');
 		}
 
+
+
+	public function tambah_kategori($serialize)
+	{
+		$this->db->set($serialize);
+		$this->db->insert('tbl_barang_kategori');
+	}
+
+
+	public function update_kategori($serialize,$id)
+	{
+		$this->db->set($serialize);
+		$this->db->where('id',$id);
+		$this->db->update('tbl_barang_kategori');
+	}
+
+	public function m_data_kategori()
+	{
+	$q = $this->db->query("SELECT * FROM tbl_barang_kategori");
+		return $q->result();	
+	}
+
+
+	public function m_kategori_by_id($id)
+	{
+	$q = $this->db->query("SELECT * FROM tbl_barang_kategori WHERE id='$id'");
+		return $q->result();	
+	}
+
+
 	public function nama_barang($id)
 	{
 		$q = $this->db->query("SELECT nama_barang FROM tbl_barang WHERE id='$id'");
@@ -130,7 +160,7 @@ if (!defined('BASEPATH'))exit('No direct script access allowed');
 			$id_cabang = $this->session->userdata('id_cabang');
 		}
 
-		$q = $this->db->query("SELECT a.*,IFNULL(b.qty,0) AS qty,IFNULL(c.qty,0) AS masuk  
+		$q = $this->db->query("SELECT a.*,IFNULL(b.qty,0) AS qty,IFNULL(c.qty,0) AS masuk ,d.kategori 
 								FROM tbl_barang a
 								LEFT JOIN(
 										SELECT 
@@ -152,6 +182,7 @@ if (!defined('BASEPATH'))exit('No direct script access allowed');
 									GROUP BY id_barang
 								)c
 								ON a.id=c.id_barang
+								LEFT JOIN tbl_barang_kategori d ON a.id_kategori=d.id
 								ORDER BY a.id DESC
 					");
 		return $q->result();

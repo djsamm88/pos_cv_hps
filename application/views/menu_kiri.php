@@ -133,6 +133,12 @@
               </a>
             </li>
 
+            <li>
+              <a href="#" onclick="eksekusi_controller('<?php echo base_url()?>index.php/barang/data_kategori','Master Kategori');return false;">
+                <i class="fa fa-link"></i> <span>Data Kategori</span>
+              </a>
+            </li>
+
               <!--
              <li>
               <a href="#" onclick="eksekusi_controller('<?php echo base_url()?>index.php/barang/data_barcode','Generate Barcode Barang');return false;">

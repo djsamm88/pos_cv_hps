@@ -27,6 +27,49 @@ class Barang extends CI_Controller {
 	}
 
 
+	public function kategori_by_id($id)
+	{
+		header('Content-Type: application/json');
+		$data['all'] = $this->m_barang->m_kategori_by_id($id);
+		echo json_encode($data['all']);
+		
+	}
+
+
+
+	public function data_kategori()
+	{
+		$data['all'] = $this->m_barang->m_data_kategori();	
+		$this->load->view('data_kategori',$data);
+
+	}
+
+
+
+	public function simpan_kategori()
+	{
+		$id = $this->input->post('id');
+		
+		$serialize = $this->input->post();
+
+		
+
+		if($id=='')
+		{
+			
+			$this->m_barang->tambah_kategori($serialize);
+			die('1');
+		}else{
+			
+			$this->m_barang->update_kategori($serialize,$id);
+			die('1');			
+
+		}
+		
+
+	}
+
+
 	public function form_barang_sementara()
 	{
 		$data['all'] = $this->m_barang->barang_masuk_order();	

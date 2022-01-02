@@ -39,6 +39,7 @@
               
               <th>No</th>
               
+              <th>Kategori</th>                     
               <th>Barang</th>                     
               <th>Stok</th>                     
               <th>Harga Beli</th>                     
@@ -79,6 +80,7 @@
               <tr>
                 <td>$no</td>
                 
+                <td>$x->kategori</td>                
                 <td>$x->nama_barang</td>                
                 <td>$x->qty</td>                
                 <td>".rupiah($x->harga_pokok)."</td>                
@@ -140,6 +142,23 @@
 
           <div class="col-sm-4">Nama Barang</div>
             <div class="col-sm-8"><input type="text" name="nama_barang" id="nama_barang" required="required" class="form-control" placeholder="nama_barang"></div>
+            <div style="clear: both;"></div><br>
+
+            <div class="col-sm-4">Kategori</div>
+            <div class="col-sm-8">
+              <select name="id_kategori" id="id_kategori" class="form-control">
+                  <option value=""> --- pilih Kategori --- </option>
+                  <?php 
+                    $data_cabang = $this->m_barang->m_data_kategori();
+                    foreach($data_cabang as $kat)
+                    {
+                      echo "
+                        <option value='$kat->id'>$kat->kategori - $kat->id</option>
+                      ";
+                    }
+                  ?>                  
+              </select>
+            </div>
             <div style="clear: both;"></div><br>
         
         <div class="col-sm-4">Harga Beli</div>
