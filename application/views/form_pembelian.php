@@ -290,7 +290,7 @@ $( function() {
                 "<td id='stoknya'>"+ui.item.stok+"</td>"+
                 "<td id='nama_barang'>"+ui.item.label+"</td>"+                
                 
-                "<td><select class='form-control' name='satuan[]'><option value='retail'>Retail</option>"+
+                "<td><select class='form-control' name='satuan[]'><option value='retail'>Buah</option>"+
                 
                 "<td>"+
                 "<input class='form-control' type='number' id='jumlah_beli' name='jumlah[]'  placeholder='qty' required value='1' >"+

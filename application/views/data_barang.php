@@ -43,7 +43,7 @@
               <th>Barang</th>                     
               <th>Stok</th>                     
               <th>Harga Beli</th>                     
-              <th>Harga Retail</th>                     
+              <th>Harga Buah</th>                     
               <th>Harga Lusin</th>                     
               <th>Harga Koli</th>                     
               <th>Jumlah / Lusin</th>                     
@@ -165,8 +165,8 @@
             <div class="col-sm-8"><input type="text" name="harga_pokok" id="harga_pokok" required="required" class="form-control nomor" placeholder="harga_pokok" ></div>
             <div style="clear: both;"></div><br>
         
-      <div class="col-sm-4">Harga Retail</div>
-            <div class="col-sm-8"><input type="text" name="harga_retail" id="harga_retail" required="required" class="form-control nomor" placeholder="harga_retail"></div>
+      <div class="col-sm-4">Harga Buah</div>
+            <div class="col-sm-8"><input type="text" name="harga_retail" id="harga_retail" required="required" class="form-control nomor" placeholder="harga_Buah"></div>
             <div style="clear: both;"></div><br>
         
 
