@@ -27,6 +27,51 @@ class Barang extends CI_Controller {
 	}
 
 
+	
+	public function satuan_by_id($id)
+	{
+		header('Content-Type: application/json');
+		$data['all'] = $this->m_barang->m_satuan_by_id($id);
+		echo json_encode($data['all']);
+		
+	}
+
+
+
+	public function data_satuan()
+	{
+		$data['all'] = $this->m_barang->m_data_satuan();	
+		$this->load->view('data_satuan',$data);
+
+	}
+
+
+
+	public function simpan_satuan()
+	{
+		$id = $this->input->post('id');
+		
+		$serialize = $this->input->post();
+
+		
+
+		if($id=='')
+		{
+			
+			$this->m_barang->tambah_satuan($serialize);
+			die('1');
+		}else{
+			
+			$this->m_barang->update_satuan($serialize,$id);
+			die('1');			
+
+		}
+		
+
+	}
+
+
+
 	public function kategori_by_id($id)
 	{
 		header('Content-Type: application/json');

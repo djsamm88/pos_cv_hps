@@ -606,6 +606,7 @@ $( function() {
                         stok: obj.qty,
                         harga_retail: obj.harga_retail, 
                         harga_lusin: obj.harga_lusin, 
+                        satuan: obj.satuan, 
                         harga_koli: obj.harga_koli, 
                         jum_per_koli: obj.jum_per_koli, 
                         jum_per_lusin: obj.jum_per_lusin, 
@@ -725,7 +726,9 @@ function template_auto(abc)
                 "<td id='stoknya'>"+abc.qty+"</td>"+
                 "<td id='nama_barang'>"+abc.nama_barang+"</td>"+
                 "<td align='right' id='t4_berat'>"+abc.berat+"</td>"+
-                "<td>"+pilih_satuan+"</td>"+
+                
+                "<td><select class='form-control' name='satuan_jual[]'><option value='"+abc.satuan+"'>"+abc.satuan+"</option>"+
+                
                 "<td align='right'>"+
                   "<input  id='t4_harga' class='form-control' readonly name='harga_jual[]' value='"+formatRupiah(abc.harga_retail)+"'>"+
                 "</td>"+

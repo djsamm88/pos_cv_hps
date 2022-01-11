@@ -11,6 +11,35 @@ if (!defined('BASEPATH'))exit('No direct script access allowed');
 
 
 
+	public function tambah_satuan($serialize)
+	{
+		$this->db->set($serialize);
+		$this->db->insert('tbl_barang_satuan');
+	}
+
+
+	public function update_satuan($serialize,$id)
+	{
+		$this->db->set($serialize);
+		$this->db->where('id',$id);
+		$this->db->update('tbl_barang_satuan');
+	}
+
+	public function m_data_satuan()
+	{
+	$q = $this->db->query("SELECT * FROM tbl_barang_satuan");
+		return $q->result();	
+	}
+
+
+	public function m_satuan_by_id($id)
+	{
+	$q = $this->db->query("SELECT * FROM tbl_barang_satuan WHERE id='$id'");
+		return $q->result();	
+	}
+
+
+
 	public function tambah_kategori($serialize)
 	{
 		$this->db->set($serialize);
@@ -160,7 +189,7 @@ if (!defined('BASEPATH'))exit('No direct script access allowed');
 			$id_cabang = $this->session->userdata('id_cabang');
 		}
 
-		$q = $this->db->query("SELECT a.*,IFNULL(b.qty,0) AS qty,IFNULL(c.qty,0) AS masuk ,d.kategori 
+		$q = $this->db->query("SELECT a.*,IFNULL(b.qty,0) AS qty,IFNULL(c.qty,0) AS masuk ,d.kategori ,e.satuan
 								FROM tbl_barang a
 								LEFT JOIN(
 										SELECT 
@@ -183,6 +212,8 @@ if (!defined('BASEPATH'))exit('No direct script access allowed');
 								)c
 								ON a.id=c.id_barang
 								LEFT JOIN tbl_barang_kategori d ON a.id_kategori=d.id
+								LEFT JOIN tbl_barang_satuan e ON a.id_satuan=e.id
+
 								ORDER BY a.id DESC
 					");
 		return $q->result();
@@ -320,7 +351,7 @@ if (!defined('BASEPATH'))exit('No direct script access allowed');
 
 	public function m_data_gudang_autocomplete($id_gudang,$cari)
 	{
-		$q = $this->db->query("SELECT a.*,IFNULL(b.qty,0) AS qty,b.id_gudang,c.nama_gudang,a.reminder
+		$q = $this->db->query("SELECT a.*,IFNULL(b.qty,0) AS qty,b.id_gudang,c.nama_gudang,a.reminder,e.satuan
 								FROM tbl_barang a
 								INNER JOIN(
 										SELECT 
@@ -336,6 +367,7 @@ if (!defined('BASEPATH'))exit('No direct script access allowed');
 								)b
 								ON a.id =b.id_barang	
 								LEFT JOIN tbl_gudang c ON b.id_gudang=c.id_gudang
+								LEFT JOIN tbl_barang_satuan e ON a.id_satuan=e.id
 								WHERE b.id_gudang='$id_gudang' AND (a.nama_barang LIKE '%$cari%' OR a.id LIKE '%$cari%') AND qty>0
 								ORDER BY b.qty ASC
 					");
@@ -345,7 +377,7 @@ if (!defined('BASEPATH'))exit('No direct script access allowed');
 
 	public function m_data_beli_autocomplete($cari)
 	{
-		$q = $this->db->query("SELECT a.*,IFNULL(b.qty,0) AS qty,b.id_gudang,c.nama_gudang,a.reminder
+		$q = $this->db->query("SELECT a.*,IFNULL(b.qty,0) AS qty,b.id_gudang,c.nama_gudang,a.reminder,e.satuan
 								FROM tbl_barang a
 								LEFT JOIN(
 										SELECT 
@@ -361,6 +393,7 @@ if (!defined('BASEPATH'))exit('No direct script access allowed');
 								)b
 								ON a.id =b.id_barang	
 								LEFT JOIN tbl_gudang c ON b.id_gudang=c.id_gudang
+								LEFT JOIN tbl_barang_satuan e ON a.id_satuan=e.id
 								WHERE  a.nama_barang LIKE '%$cari%' 
 								ORDER BY b.qty ASC
 					");

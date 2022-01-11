@@ -40,15 +40,13 @@
               <th>No</th>
               
               <th>Kategori</th>                     
-              <th>Barang</th>                     
+              <th>Barang</th>
+              <th>Satuan</th>                     
+
               <th>Stok</th>                     
               <th>Harga Beli</th>                     
               <th>Harga Buah</th>                     
-              <th>Harga Lusin</th>                     
-              <th>Harga Koli</th>                     
-              <th>Jumlah / Lusin</th>                     
-              <th>Jumlah / Koli</th>                     
-              <th>Reminder Gudang</th>                     
+              
               <th>Berat (Gram)</th>                     
               <th>Gambar</th>                     
               <th>Action</th>                     
@@ -82,14 +80,11 @@
                 
                 <td>$x->kategori</td>                
                 <td>$x->nama_barang</td>                
+                <td>$x->satuan</td>                
                 <td>$x->qty</td>                
                 <td>".rupiah($x->harga_pokok)."</td>                
                 <td>".rupiah($x->harga_retail)."</td>                
-                <td>".rupiah($x->harga_lusin)."</td>                
-                <td>".rupiah($x->harga_koli)."</td>                
-                <td>".rupiah($x->jum_per_lusin)."</td>     
-                <td>".rupiah($x->jum_per_koli)."</td>     
-                <td>$x->reminder</td>                           
+                
                 <td>$x->berat</td>                           
                 <td><a target='blank' href='".base_url()."uploads/$x->gambar'>$x->gambar</a></td>                           
                 <td>
@@ -160,6 +155,24 @@
               </select>
             </div>
             <div style="clear: both;"></div><br>
+
+
+            <div class="col-sm-4">Satuan</div>
+            <div class="col-sm-8">
+              <select name="id_satuan" id="id_satuan" class="form-control">
+                  <option value=""> --- pilih Satuan --- </option>
+                  <?php 
+                    $data_sat = $this->m_barang->m_data_satuan();
+                    foreach($data_sat as $sat)
+                    {
+                      echo "
+                        <option value='$sat->id'>$sat->satuan - $sat->id</option>
+                      ";
+                    }
+                  ?>                  
+              </select>
+            </div>
+            <div style="clear: both;"></div><br>
         
         <div class="col-sm-4">Harga Beli</div>
             <div class="col-sm-8"><input type="text" name="harga_pokok" id="harga_pokok" required="required" class="form-control nomor" placeholder="harga_pokok" ></div>
@@ -170,32 +183,6 @@
             <div style="clear: both;"></div><br>
         
 
-        <div class="col-sm-4">Harga Lusin</div>
-            <div class="col-sm-8"><input type="text" name="harga_lusin" id="harga_lusin" required="required" class="form-control nomor" placeholder="harga_lusin"></div>
-            <div style="clear: both;"></div><br>
-
-
-        <div class="col-sm-4">Harga Koli</div>
-            <div class="col-sm-8"><input type="text" name="harga_koli" id="harga_koli" required="required" class="form-control nomor" placeholder="harga_koli"></div>
-            <div style="clear: both;"></div><br>
-
-
-
-        <div class="col-sm-4">Jumlah/Lusin</div>
-            <div class="col-sm-8"><input type="text" name="jum_per_lusin" id="jum_per_lusin" required="required" class="form-control nomor" placeholder="jum_per_lusin" ></div>
-            <div style="clear: both;"></div><br>
-        
-
-
-        <div class="col-sm-4">Jumlah/Koli</div>
-            <div class="col-sm-8"><input type="text" name="jum_per_koli" id="jum_per_koli" required="required" class="form-control nomor" placeholder="jum_per_koli" ></div>
-            <div style="clear: both;"></div><br>
-        
-
-
-        <div class="col-sm-4">Reminder Gudang</div>
-            <div class="col-sm-8"><input type="text" name="reminder" id="reminder" required="required" class="form-control nomor" placeholder="reminder gudang" ></div>
-            <div style="clear: both;"></div><br>
 
 
           <div class="col-sm-4">Gambar</div>
@@ -243,13 +230,9 @@ function edit(id)
     
     $("#nama_barang").val(e[0].nama_barang);
     $("#harga_retail").val(e[0].harga_retail);
-    $("#harga_lusin").val(e[0].harga_lusin);
-    $("#harga_koli").val(e[0].harga_koli);
-    $("#jum_per_koli").val(e[0].jum_per_koli);
-    $("#jum_per_lusin").val(e[0].jum_per_lusin);
+    
 
     $("#harga_pokok").val(e[0].harga_pokok);
-    $("#reminder").val(e[0].reminder);
     $("#berat").val(e[0].berat);
     $("#gambar").val(e[0].gambar);
     console.log(e[0].qty);

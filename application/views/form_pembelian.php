@@ -255,6 +255,8 @@ $( function() {
                         harga_retail: obj.harga_retail, 
                         harga_lusin: obj.harga_lusin, 
                         harga_koli: obj.harga_koli, 
+                        satuan: obj.satuan, 
+                        id_satuan: obj.id_satuan, 
                         jum_per_koli: obj.jum_per_koli, 
                         jum_per_lusin: obj.jum_per_lusin, 
                         reminder: obj.reminder, 
@@ -290,7 +292,7 @@ $( function() {
                 "<td id='stoknya'>"+ui.item.stok+"</td>"+
                 "<td id='nama_barang'>"+ui.item.label+"</td>"+                
                 
-                "<td><select class='form-control' name='satuan[]'><option value='retail'>Buah</option>"+
+                "<td><select class='form-control' name='satuan[]'><option value='"+ui.item.satuan+"'>"+ui.item.satuan+"</option>"+
                 
                 "<td>"+
                 "<input class='form-control' type='number' id='jumlah_beli' name='jumlah[]'  placeholder='qty' required value='1' >"+

@@ -55,18 +55,8 @@
         {
           $no++;
             
-          if($x->satuan == 'koli')
-          {
-            $jum = $x->jumlah*$x->jum_per_koli;
-          }
-          if($x->satuan == 'lusin')
-          {
-            $jum = $x->jumlah*$x->jum_per_lusin;
-          }
-          if($x->satuan == 'retail')
-          {
-            $jum = $x->jumlah*1;
-          }
+          
+
 
             echo (" 
               
@@ -74,7 +64,7 @@
                 <td>$no</td>
                 <td id='id_barang'>$x->id</td>
                 <td>$x->nama_barang</td>    
-                <td id='qty_awal'>$x->jumlah - $x->satuan <br>($jum pcs)</td>    
+                <td id='qty_awal'>$x->jumlah - $x->satuan </td>    
                          
                 <td class='warning'>
                   <input class='form-control' name='qty' type='number' id='qty'>                  
